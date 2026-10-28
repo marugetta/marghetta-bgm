@@ -7,4 +7,5 @@
   - `[Verse 1 – Soft Female Vocal]` のような区切りは「Verse 1」の見出しになります
   - そのすぐ下に続く `[Staccato Piano Riff]` `[No Vocals]` などの演奏の指示は表示しません
   - 歌のない区間（Intro や Piano Solo など）は見出しも表示しません
+  - `(Deep kick starts)` のように、かっこ書きで楽器や演奏の言葉（kick, piano, shamisen, solo など）を含む行も表示しません。`(It’s me)` `（マルゲッタ）` のような合いの手は表示します
 - 追加・修正は GitHub の **Add file → Create new file**（またはファイルを開いて鉛筆マーク）→ **Commit changes**。2〜3分で反映されます
