@@ -50,6 +50,9 @@
   .qchip{display:none;align-items:center;gap:4px;background:rgba(255,255,255,.22);border:none;color:#fff;
     border-radius:999px;padding:3px 9px;font-size:11px;cursor:pointer}
   .qchip.show{display:inline-flex}
+  .bpm{display:none;background:rgba(255,255,255,.22);border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;
+    letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .bpm.show{display:inline-block}
   .seek{margin-top:14px}
   input[type=range]{--p:0%;width:100%;height:26px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
   input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;
@@ -96,6 +99,12 @@
   .tag small{color:var(--muted);margin-left:2px}
   .tag.on{background:var(--pink);border-color:var(--pink);color:#fff}
   .tag.on small{color:rgba(255,255,255,.8)}
+  .tempos{margin-top:8px}
+  .tempo{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;
+    font-size:13px;cursor:pointer;color:var(--ink)}
+  .tempo small{color:var(--muted);margin-left:4px}
+  .tempo.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .tempo.on small{color:rgba(255,255,255,.75)}
   .actions{display:flex;align-items:center;gap:8px;margin:12px 16px 0}
   .count{flex:1;font-size:13px;color:var(--muted)}
   .count b{color:var(--ink);font-size:15px}
@@ -115,6 +124,8 @@
   li .t{font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   li .tg{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
   li .tg span{font-size:11px;color:var(--pink-d);background:var(--pink-l);border-radius:6px;padding:1px 6px}
+  li .bp{flex:none;text-align:right;font-size:15px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+  li .bp small{display:block;font-size:9px;font-weight:500;color:var(--muted);letter-spacing:.06em;margin-top:2px}
   li.cur{background:var(--card);box-shadow:0 2px 10px rgba(201,62,85,.12)}
   li.cur .t{color:var(--pink-d);font-weight:700}
   li.cur .n{color:var(--pink);font-weight:700}
@@ -147,7 +158,7 @@
     <div class="meta">
       <div class="eyebrow">NOW PLAYING</div>
       <div class="title" id="title">曲を読み込み中…</div>
-      <div class="sub"><span id="sub">&nbsp;</span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button></div>
+      <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button></div>
     </div>
   </div>
   <div class="seek">
@@ -176,6 +187,7 @@
     <button class="clear" id="clearBtn" aria-label="検索をクリア">×</button>
   </div>
   <div class="row tags" id="tags"></div>
+  <div class="row tempos" id="tempos"></div>
   <div class="actions">
     <div class="count" id="count"></div>
     <button class="act seq" id="playSeqBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>順番に再生</button>
@@ -205,6 +217,14 @@
   let order = [];           // 再生順（曲インデックス）
   let pos = 0;              // order 内の位置
   let tagFilter = '';       // 選んでいるタグ
+  let tempoFilter = '';     // 選んでいるテンポ
+  // テンポの区切り（BPM）。max 未満がその区分
+  const TEMPOS = [
+    { id: 'slow', label: 'ゆったり', max: 110 },
+    { id: 'mid',  label: 'ふつう',   max: 128 },
+    { id: 'fast', label: 'アップテンポ', max: Infinity },
+  ];
+  const tempoOf = s => s.bpm ? TEMPOS.find(t => s.bpm < t.max).id : '';
   let shuffle = store.get('shuffle', true);
   let repeat = store.get('repeat', true);
   let auto = store.get('auto', true);
@@ -229,10 +249,12 @@
   // --- 検索・タグの絞り込み ---
   function filterLabel(){
     const q = $('q').value.trim();
-    return [tagFilter && '#' + tagFilter, q && `「${q}」`].filter(Boolean).join(' ');
+    const tp = TEMPOS.find(t => t.id === tempoFilter);
+    return [tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
   }
   function matches(s){
     if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
+    if (tempoFilter && tempoOf(s) !== tempoFilter) return false;
     const q = norm($('q').value.trim());
     if (!q) return true;
     const words = q.split(/\s+/);
@@ -268,6 +290,7 @@
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
     $('title').textContent = s.title;
+    $('bpm').textContent = s.bpm ? `♩ ${s.bpm} BPM` : ''; $('bpm').classList.toggle('show', !!s.bpm);
     updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
@@ -334,6 +357,25 @@
       b.onclick = () => { tagFilter = tagFilter === t ? '' : t; renderTags(); renderList(); };
       el.appendChild(b);
     });
+    renderTempos();
+  }
+
+  function renderTempos(){
+    const el = $('tempos'); el.innerHTML = '';
+    const counts = {};
+    for (const s of songs()) { const t = tempoOf(s); if (t) counts[t] = (counts[t] || 0) + 1; }
+    if (tempoFilter && !counts[tempoFilter]) tempoFilter = '';
+    // 全曲が同じ区分なら絞り込む意味がないので出さない
+    el.style.display = Object.keys(counts).length > 1 ? '' : 'none';
+    TEMPOS.forEach((t, k) => {
+      if (!counts[t.id]) return;
+      const lo = k ? TEMPOS[k-1].max : 0;
+      const b = document.createElement('button');
+      b.className = 'tempo' + (t.id === tempoFilter ? ' on' : '');
+      b.innerHTML = `♩ ${t.label}<small>${lo ? lo : ''}〜${isFinite(t.max) ? t.max - 1 : ''}　${counts[t.id]}曲</small>`;
+      b.onclick = () => { tempoFilter = tempoFilter === t.id ? '' : t.id; renderTempos(); renderList(); };
+      el.appendChild(b);
+    });
   }
 
   function renderList(){
@@ -349,7 +391,7 @@
       const s = songs()[i];
       const li = document.createElement('li');
       li.className = (i === cur ? 'cur' : '') + (queueLabel && !queue.includes(i) ? ' out' : '');
-      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>`;
+      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>${s.bpm ? `<span class="bp">${s.bpm}<small>BPM</small></span>` : ''}`;
       li.querySelector('.t').textContent = s.title;
       for (const t of s.tags || []){ const sp = document.createElement('span'); sp.textContent = '#' + t; li.querySelector('.tg').appendChild(sp); }
       // タップした曲から、いま表示している曲の範囲で再生

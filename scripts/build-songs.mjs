@@ -11,9 +11,9 @@ const config = existsSync(join(ROOT, 'config.json'))
   ? JSON.parse(readFileSync(join(ROOT, 'config.json'), 'utf8'))
   : {};
 const labels = config.labels || {};
-const tagMap = existsSync(join(ROOT, 'tags.json'))
-  ? JSON.parse(readFileSync(join(ROOT, 'tags.json'), 'utf8'))
-  : {};
+const readJson = name => existsSync(join(ROOT, name)) ? JSON.parse(readFileSync(join(ROOT, name), 'utf8')) : {};
+const bpmMap = readJson('bpm.json');
+const tagMap = readJson('tags.json');
 
 function walk(dir) {
   if (!existsSync(dir)) return [];
@@ -30,9 +30,11 @@ const toSong = p => ({
   file: relative(ROOT, p).split(sep).join('/').normalize('NFC'),
   tags: [],
 });
+const withBpm = s => { const v = bpmMap[s.title]; return v ? { ...s, bpm: v } : s; };
 const byTitle = (a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true });
 
-const all = walk(MUSIC).map(toSong).sort(byTitle);
+// bpm.json（曲名 → BPM）は scripts/measure-bpm.py で作ります
+const all = walk(MUSIC).map(toSong).map(withBpm).sort(byTitle);
 
 // tags.json（タグ名 → 曲名の一覧）を各曲に付ける
 const byName = new Map(all.map(s => [s.title, s]));
