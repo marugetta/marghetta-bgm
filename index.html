@@ -10,88 +10,146 @@
 <title>マルゲッタ BGM</title>
 <style>
   :root{
-    --pink:#E8546B; --pink-d:#C93E55; --pink-l:#FBE3E6;
-    --cream:#FFF8F0; --ink:#3B2A2A; --muted:#8C7774; --line:#F0DCD6;
+    --pink:#E8546B; --pink-d:#C93E55; --coral:#F58A6E; --pink-l:#FDECEE;
+    --cream:#FFF8F2; --card:#FFFFFF; --ink:#3B2A2A; --muted:#8C7774; --line:#F2E1DB;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:var(--cream);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}
-  body{min-height:100dvh;display:flex;flex-direction:column;
-    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-  header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 6px}
-  .brand{font-weight:800;letter-spacing:.06em;font-size:15px;color:var(--pink-d)}
-  .brand small{display:block;font-weight:500;letter-spacing:.02em;font-size:11px;color:var(--muted)}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;
-    font-size:12px;color:var(--ink);display:flex;gap:6px;align-items:center;cursor:pointer}
-  .chip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+  body{min-height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  button{font:inherit}
 
-  .now{margin:8px 16px 0;background:#fff;border:1px solid var(--line);border-radius:22px;
-    padding:20px 18px 16px;box-shadow:0 6px 20px rgba(232,84,107,.08)}
-  .disc{width:132px;height:132px;margin:2px auto 14px;border-radius:50%;
-    background:radial-gradient(circle at 50% 50%,var(--cream) 0 15%,var(--pink) 16% 17%,
-      #F37A8C 18% 44%,var(--pink) 45% 70%,var(--pink-d) 71% 100%);
-    box-shadow:0 8px 22px rgba(201,62,85,.25)}
-  .playing .disc{animation:spin 6s linear infinite}
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px 8px}
+  .brand{display:flex;align-items:center;gap:10px;min-width:0}
+  .logo{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;
+    font-weight:800;font-size:17px;background:linear-gradient(135deg,var(--coral),var(--pink-d))}
+  .brand b{display:block;font-size:14px;letter-spacing:.04em;color:var(--pink-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chips{display:flex;gap:6px;flex:none}
+  .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 11px;
+    font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* 再生中カード */
+  .now{margin:6px 16px 0;border-radius:26px;padding:20px 18px 14px;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(150deg,var(--coral) 0%,var(--pink) 45%,var(--pink-d) 100%);
+    box-shadow:0 12px 30px rgba(201,62,85,.28)}
+  .now::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none}
+  .np{display:flex;align-items:center;gap:16px}
+  .disc{flex:none;width:92px;height:92px;border-radius:50%;
+    background:radial-gradient(circle,#fff 0 9%,var(--pink-d) 10% 12%,#2E2024 13% 30%,#3A2A2E 31% 33%,#2E2024 34% 56%,#3A2A2E 57% 59%,#2E2024 60% 100%);
+    box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 0 0 3px rgba(255,255,255,.15)}
+  .playing .disc{animation:spin 5s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .title{font-size:18px;font-weight:700;text-align:center;line-height:1.35;
-    min-height:2.7em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .sub{text-align:center;font-size:12px;color:var(--muted);margin-top:2px}
+  .meta{min-width:0;flex:1}
+  .eyebrow{font-size:11px;letter-spacing:.12em;opacity:.85}
+  .title{font-size:19px;font-weight:800;line-height:1.3;margin-top:4px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+  .sub{font-size:12px;opacity:.9;margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .qchip{display:none;align-items:center;gap:4px;background:rgba(255,255,255,.22);border:none;color:#fff;
+    border-radius:999px;padding:3px 9px;font-size:11px;cursor:pointer}
+  .qchip.show{display:inline-flex}
   .seek{margin-top:14px}
-  input[type=range]{width:100%;accent-color:var(--pink);height:28px}
-  .times{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .controls{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:6px}
-  .btn{border:none;background:none;color:var(--ink);width:48px;height:48px;border-radius:50%;
+  input[type=range]{--p:0%;width:100%;height:26px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;
+    background:linear-gradient(to right,#fff var(--p),rgba(255,255,255,.3) var(--p))}
+  input[type=range]::-moz-range-track{height:4px;border-radius:2px;
+    background:linear-gradient(to right,#fff var(--p),rgba(255,255,255,.3) var(--p))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-6px;border-radius:50%;
+    background:#fff;border:none;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:none}
+  .times{display:flex;justify-content:space-between;font-size:11px;opacity:.85;font-variant-numeric:tabular-nums}
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:4px;padding:0 4px}
+  .btn{border:none;background:none;color:#fff;width:48px;height:48px;border-radius:50%;
     display:grid;place-items:center;cursor:pointer}
-  .btn svg{width:26px;height:26px;fill:currentColor}
+  .btn svg{width:28px;height:28px;fill:currentColor}
   .btn.small svg{width:22px;height:22px}
-  .btn.toggle{color:#C9B5B1}
-  .btn.toggle.on{color:var(--pink)}
-  .btn.main{width:72px;height:72px;background:var(--pink);color:#fff;box-shadow:0 6px 16px rgba(232,84,107,.35)}
+  .btn.toggle{opacity:.45}
+  .btn.toggle.on{opacity:1}
+  .btn.main{width:68px;height:68px;background:#fff;color:var(--pink);box-shadow:0 6px 16px rgba(0,0,0,.18)}
   .btn.main svg{width:34px;height:34px}
-  .btn:active{transform:scale(.94)}
-  .vol{display:flex;align-items:center;gap:10px;margin-top:8px;color:var(--muted);font-size:12px}
+  .btn:active{transform:scale(.93)}
+  .vol{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:12px}
   .vol input{flex:1}
 
-  .tabs{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 4px;scrollbar-width:none}
-  .tabs::-webkit-scrollbar{display:none}
-  .tab{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;
+  /* 検索・タグ（スクロールしても上に残る） */
+  .finder{position:sticky;top:0;z-index:5;background:var(--cream);padding:12px 0 8px;
+    box-shadow:0 8px 12px -12px rgba(59,42,42,.25)}
+  .row{display:flex;gap:8px;overflow-x:auto;padding:0 16px;scrollbar-width:none}
+  .row::-webkit-scrollbar{display:none}
+  .tab{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;
     font-size:13px;cursor:pointer;color:var(--ink)}
   .tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
-  .search{margin:8px 16px 0;position:relative}
-  .search input{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;
-    font-size:16px;background:#fff;color:var(--ink)}
-  ol{list-style:none;margin:8px 0 0;padding:0 8px 24px;flex:1}
-  li{display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:12px;cursor:pointer}
+  .search{margin:10px 16px 0;position:relative}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;fill:var(--muted)}
+  .search input{width:100%;border:1px solid var(--line);border-radius:14px;padding:11px 36px 11px 38px;
+    font-size:16px;background:var(--card);color:var(--ink);-webkit-appearance:none;appearance:none}
+  .search input:focus{outline:2px solid var(--pink-l);border-color:var(--pink)}
+  .search input::-webkit-search-cancel-button{display:none}
+  .clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:none;
+    color:var(--muted);font-size:18px;width:32px;height:32px;cursor:pointer;display:none}
+  .clear.show{display:block}
+  .tags{margin-top:10px}
+  .tag{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;
+    font-size:13px;cursor:pointer;color:var(--pink-d)}
+  .tag small{color:var(--muted);margin-left:2px}
+  .tag.on{background:var(--pink);border-color:var(--pink);color:#fff}
+  .tag.on small{color:rgba(255,255,255,.8)}
+  .actions{display:flex;align-items:center;gap:8px;margin:12px 16px 0}
+  .count{flex:1;font-size:13px;color:var(--muted)}
+  .count b{color:var(--ink);font-size:15px}
+  .act{border:none;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .act svg{width:16px;height:16px;fill:currentColor}
+  .act.seq{background:var(--ink);color:#fff}
+  .act.shf{background:var(--pink);color:#fff}
+  .act:active{transform:scale(.96)}
+  .act:disabled{opacity:.4}
+
+  ol{list-style:none;margin:4px 0 0;padding:0 12px 32px}
+  li{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;cursor:pointer}
   li:active{background:var(--pink-l)}
-  li .n{width:26px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-  li .t{flex:1;font-size:14px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  li.cur{background:var(--pink-l)}
+  li .n{flex:none;width:26px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  li .b{flex:1;min-width:0}
+  li .t{font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  li .tg{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+  li .tg span{font-size:11px;color:var(--pink-d);background:var(--pink-l);border-radius:6px;padding:1px 6px}
+  li.cur{background:var(--card);box-shadow:0 2px 10px rgba(201,62,85,.12)}
   li.cur .t{color:var(--pink-d);font-weight:700}
-  li.cur .n{color:var(--pink)}
-  .msg{margin:24px 20px;padding:16px;border-radius:14px;background:#fff;border:1px dashed var(--line);
+  li.cur .n{color:var(--pink);font-weight:700}
+  li.out{opacity:.6}
+  .empty{text-align:center;color:var(--muted);font-size:13px;padding:32px 16px}
+  .msg{margin:24px 20px;padding:16px;border-radius:14px;background:var(--card);border:1px dashed var(--line);
     font-size:13px;line-height:1.7;color:var(--muted)}
   .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);
-    background:var(--ink);color:#fff;font-size:13px;padding:10px 16px;border-radius:999px;opacity:0;
+    background:var(--ink);color:#fff;font-size:13px;padding:10px 16px;border-radius:999px;opacity:0;z-index:10;
     transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
-  .toast.show{opacity:.92}
-  @media (min-width:700px){
-    body{max-width:560px;margin:0 auto}
-  }
+  .toast.show{opacity:.94}
+  @media (min-width:700px){ body{max-width:560px;margin:0 auto} }
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">MARGHETTA BGM<small>めんたいこ生パスタ マルゲッタ</small></div>
-  <div style="display:flex;gap:6px">
+  <div class="brand">
+    <div class="logo">M</div>
+    <div style="min-width:0"><b>MARGHETTA BGM</b><small>めんたいこ生パスタ マルゲッタ</small></div>
+  </div>
+  <div class="chips">
     <button class="chip" id="autoBtn" title="時間帯でプレイリストを自動切替">⏰ 自動</button>
     <button class="chip" id="wakeBtn" title="再生中は画面を消さない">☀ 画面ON</button>
   </div>
 </header>
 
 <section class="now" id="now">
-  <div class="disc"></div>
-  <div class="title" id="title">曲を読み込み中…</div>
-  <div class="sub" id="sub">&nbsp;</div>
+  <div class="np">
+    <div class="disc"></div>
+    <div class="meta">
+      <div class="eyebrow">NOW PLAYING</div>
+      <div class="title" id="title">曲を読み込み中…</div>
+      <div class="sub"><span id="sub">&nbsp;</span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button></div>
+    </div>
+  </div>
   <div class="seek">
     <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
     <div class="times"><span id="cur">0:00</span><span id="dur">0:00</span></div>
@@ -110,8 +168,20 @@
   <div class="vol" id="volRow">🔈<input type="range" id="vol" min="0" max="100" value="70" aria-label="音量">🔊</div>
 </section>
 
-<nav class="tabs" id="tabs"></nav>
-<div class="search"><input type="search" id="q" placeholder="曲名で検索" autocomplete="off"></div>
+<section class="finder" id="finder">
+  <nav class="row" id="tabs"></nav>
+  <div class="search">
+    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 9.5 16a6.5 6.5 0 0 0 4.2-1.6l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/></svg>
+    <input type="search" id="q" placeholder="曲名・#タグで検索" autocomplete="off" enterkeyhint="search">
+    <button class="clear" id="clearBtn" aria-label="検索をクリア">×</button>
+  </div>
+  <div class="row tags" id="tags"></div>
+  <div class="actions">
+    <div class="count" id="count"></div>
+    <button class="act seq" id="playSeqBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>順番に再生</button>
+    <button class="act shf" id="playShfBtn"><svg viewBox="0 0 24 24"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2 1.4-1.4ZM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4h-5.5Zm.3 9.4-1.4 1.4 3.1 3.1-2 2.1H20v-5.5l-2 2-3.2-3.1Z"/></svg>シャッフル</button>
+  </div>
+</section>
 <ol id="list"></ol>
 <div class="toast" id="toast"></div>
 
@@ -128,10 +198,13 @@
     set(k, v){ try{ localStorage.setItem('mbgm:'+k, JSON.stringify(v)); }catch{} }
   };
 
-  let data = { playlists: [], schedule: [] };
+  let data = { playlists: [], schedule: [], tags: [] };
   let plIndex = 0;          // 表示・再生中のプレイリスト
+  let queue = [];           // 再生する曲（曲インデックス）。絞り込み再生のときはその曲だけ
+  let queueLabel = '';      // 絞り込み再生の名前（例：#ハロウィン）
   let order = [];           // 再生順（曲インデックス）
   let pos = 0;              // order 内の位置
+  let tagFilter = '';       // 選んでいるタグ
   let shuffle = store.get('shuffle', true);
   let repeat = store.get('repeat', true);
   let auto = store.get('auto', true);
@@ -151,25 +224,51 @@
   const songs = () => data.playlists[plIndex]?.songs || [];
   const current = () => songs()[order[pos]];
   const urlOf = f => f.split('/').map(encodeURIComponent).join('/');
+  const norm = s => s.normalize('NFKC').toLowerCase();
+
+  // --- 検索・タグの絞り込み ---
+  function filterLabel(){
+    const q = $('q').value.trim();
+    return [tagFilter && '#' + tagFilter, q && `「${q}」`].filter(Boolean).join(' ');
+  }
+  function matches(s){
+    if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
+    const q = norm($('q').value.trim());
+    if (!q) return true;
+    const words = q.split(/\s+/);
+    return words.every(w => w.startsWith('#')
+      ? (s.tags || []).some(t => norm(t).includes(w.slice(1)))
+      : norm(s.title).includes(w) || (s.tags || []).some(t => norm(t).includes(w)));
+  }
+  const visible = () => songs().map((s, i) => i).filter(i => matches(songs()[i]));
 
   function makeOrder(startSong){
-    const n = songs().length;
-    order = [...Array(n).keys()];
+    order = [...queue];
     if (shuffle){
-      for (let i = n-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [order[i],order[j]] = [order[j],order[i]]; }
+      for (let i = order.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [order[i],order[j]] = [order[j],order[i]]; }
       if (startSong != null){ const k = order.indexOf(startSong); if (k > 0){ [order[0],order[k]] = [order[k],order[0]]; } }
       pos = 0;
     } else {
-      pos = startSong != null ? startSong : 0;
+      pos = Math.max(0, order.indexOf(startSong));
     }
   }
+  function setQueue(list, label){
+    queue = list; queueLabel = label || '';
+    $('qchip').textContent = queueLabel ? `${queueLabel} だけ再生中 ×` : '';
+    $('qchip').classList.toggle('show', !!queueLabel);
+  }
+  function manualTakeover(){
+    if (auto){ auto = false; store.set('auto', false); syncChips(); toast('手動選択のため自動切替をOFFにしました'); }
+  }
+
+  const updateSub = () => { $('sub').textContent = `${data.playlists[plIndex].label}　${pos+1} / ${order.length}`; };
 
   function load(play){
     const s = current();
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
     $('title').textContent = s.title;
-    $('sub').textContent = `${data.playlists[plIndex].label}　${order[pos]+1} / ${songs().length}`;
+    updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
     if ('mediaSession' in navigator){
@@ -191,34 +290,74 @@
   }
 
   function selectPlaylist(i, play, fromAuto){
-    plIndex = i; makeOrder(); store.set('pl', data.playlists[i].id);
-    renderTabs(); load(play);
+    plIndex = i; setQueue([...songs().keys()]); makeOrder(); store.set('pl', data.playlists[i].id);
+    renderTabs(); renderTags(); load(play);
     if (fromAuto) toast(`時間帯に合わせて「${data.playlists[i].label}」に切り替えました`);
+  }
+
+  // 絞り込んだ曲だけを再生（mode: 'seq' 上から順番 / 'shf' シャッフル）
+  function playVisible(mode){
+    const list = visible();
+    if (!list.length) return;
+    manualTakeover();
+    shuffle = mode === 'shf'; store.set('shuffle', shuffle); syncChips();
+    setQueue(list, filterLabel());
+    makeOrder(shuffle ? null : list[0]);
+    load(true);
+    toast(`${queueLabel || data.playlists[plIndex].label} を${shuffle ? 'シャッフル' : '順番に'}再生（${list.length}曲）`);
   }
 
   function renderTabs(){
     $('tabs').innerHTML = '';
+    $('tabs').style.display = data.playlists.length > 1 ? '' : 'none';
     data.playlists.forEach((p, i) => {
       const b = document.createElement('button');
       b.className = 'tab' + (i === plIndex ? ' on' : '');
       b.textContent = `${p.label}（${p.songs.length}）`;
-      b.onclick = () => { if (auto){ auto = false; store.set('auto', false); syncChips(); toast('手動選択のため自動切替をOFFにしました'); }
-        selectPlaylist(i, !audio.paused); };
+      b.onclick = () => { manualTakeover(); selectPlaylist(i, !audio.paused); };
       $('tabs').appendChild(b);
     });
   }
 
+  function renderTags(){
+    const el = $('tags'); el.innerHTML = '';
+    const counts = {};
+    for (const s of songs()) for (const t of s.tags || []) counts[t] = (counts[t] || 0) + 1;
+    const names = [...(data.tags || []), ...Object.keys(counts)].filter((t, i, a) => counts[t] && a.indexOf(t) === i);
+    if (tagFilter && !counts[tagFilter]) tagFilter = '';
+    el.style.display = names.length ? '' : 'none';
+    names.forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'tag' + (t === tagFilter ? ' on' : '');
+      b.innerHTML = `#<span></span><small>${counts[t]}</small>`;
+      b.querySelector('span').textContent = t;
+      b.onclick = () => { tagFilter = tagFilter === t ? '' : t; renderTags(); renderList(); };
+      el.appendChild(b);
+    });
+  }
+
   function renderList(){
-    const q = $('q').value.trim().toLowerCase();
+    const list = visible();
+    const filtered = list.length !== songs().length;
     const cur = order[pos];
     const ol = $('list'); ol.innerHTML = '';
-    songs().forEach((s, i) => {
-      if (q && !s.title.toLowerCase().includes(q)) return;
+    $('clearBtn').classList.toggle('show', !!$('q').value);
+    $('count').innerHTML = filtered ? `<b>${list.length}</b> 曲` : `全 <b>${list.length}</b> 曲`;
+    $('playSeqBtn').disabled = $('playShfBtn').disabled = !list.length;
+    if (!list.length){ ol.innerHTML = '<div class="empty">該当する曲がありません</div>'; return; }
+    list.forEach((i, k) => {
+      const s = songs()[i];
       const li = document.createElement('li');
-      if (i === cur) li.className = 'cur';
-      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : i+1}</span><span class="t"></span>`;
+      li.className = (i === cur ? 'cur' : '') + (queueLabel && !queue.includes(i) ? ' out' : '');
+      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>`;
       li.querySelector('.t').textContent = s.title;
-      li.onclick = () => { makeOrder(i); if(!shuffle) pos = i; load(true); };
+      for (const t of s.tags || []){ const sp = document.createElement('span'); sp.textContent = '#' + t; li.querySelector('.tg').appendChild(sp); }
+      // タップした曲から、いま表示している曲の範囲で再生
+      li.onclick = () => {
+        if (filtered){ manualTakeover(); setQueue(list, filterLabel()); }
+        else setQueue([...songs().keys()]);
+        makeOrder(i); load(true);
+      };
       ol.appendChild(li);
     });
   }
@@ -262,15 +401,23 @@
   $('playBtn').onclick = () => { if (!audio.src) load(false); audio.paused ? audio.play().catch(()=>toast('再生できませんでした')) : audio.pause(); };
   $('nextBtn').onclick = () => next(false);
   $('prevBtn').onclick = prev;
-  $('shuffleBtn').onclick = () => { shuffle = !shuffle; store.set('shuffle', shuffle); const c = order[pos]; makeOrder(c); syncChips(); toast(shuffle ? 'シャッフル ON' : 'シャッフル OFF'); };
+  $('shuffleBtn').onclick = () => { shuffle = !shuffle; store.set('shuffle', shuffle); makeOrder(order[pos]); syncChips(); updateSub(); renderList();
+    toast(shuffle ? 'シャッフル ON' : 'シャッフル OFF（上から順番）'); };
   $('repeatBtn').onclick = () => { repeat = !repeat; store.set('repeat', repeat); syncChips(); toast(repeat ? 'ループ ON' : 'ループ OFF'); };
   $('autoBtn').onclick = () => { auto = !auto; store.set('auto', auto); syncChips();
-    toast(auto ? (data.schedule?.length ? '時間帯で自動切替 ON' : '時間帯の設定がありません（schedule.json）') : '自動切替 OFF'); checkSchedule(); };
+    toast(auto ? (data.schedule?.length ? '時間帯で自動切替 ON' : '時間帯の設定がありません（config.json）') : '自動切替 OFF'); checkSchedule(); };
   $('wakeBtn').onclick = () => { wakeWanted = !wakeWanted; store.set('wake', wakeWanted); syncChips(); applyWake();
     if (!('wakeLock' in navigator)) toast('この端末では未対応です。端末の自動ロックをOFFにしてください'); };
   $('q').oninput = renderList;
-  $('vol').oninput = e => { audio.volume = e.target.value/100; store.set('vol', +e.target.value); };
-  $('seek').oninput = e => { if (audio.duration) audio.currentTime = e.target.value/1000*audio.duration; };
+  $('q').onkeydown = e => { if (e.key === 'Enter') e.target.blur(); };
+  $('clearBtn').onclick = () => { $('q').value = ''; renderList(); };
+  $('playSeqBtn').onclick = () => playVisible('seq');
+  $('playShfBtn').onclick = () => playVisible('shf');
+  $('qchip').onclick = () => { setQueue([...songs().keys()]); makeOrder(order[pos]); updateSub(); renderList();
+    toast('全曲の再生に戻しました'); };
+  const fill = el => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
+  $('vol').oninput = e => { audio.volume = e.target.value/100; store.set('vol', +e.target.value); fill(e.target); };
+  $('seek').oninput = e => { if (audio.duration) audio.currentTime = e.target.value/1000*audio.duration; fill(e.target); };
 
   audio.addEventListener('play', () => { $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
   audio.addEventListener('pause', () => { $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
@@ -278,7 +425,7 @@
   audio.addEventListener('error', () => { if (!audio.src) return; toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
   audio.addEventListener('timeupdate', () => {
     $('cur').textContent = fmt(audio.currentTime); $('dur').textContent = fmt(audio.duration);
-    if (audio.duration) $('seek').value = audio.currentTime/audio.duration*1000;
+    if (audio.duration){ $('seek').value = audio.currentTime/audio.duration*1000; fill($('seek')); }
   });
   document.addEventListener('visibilitychange', applyWake);
   if ('mediaSession' in navigator){
@@ -289,7 +436,7 @@
   }
 
   // --- 起動 ---
-  const v = store.get('vol', 70); $('vol').value = v; audio.volume = v/100;
+  const v = store.get('vol', 70); $('vol').value = v; audio.volume = v/100; fill($('vol'));
   syncChips();
   fetch('songs.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => { if (!r.ok) throw 0; return r.json(); })
@@ -298,12 +445,12 @@
       if (!data.playlists?.length || !data.playlists.some(p => p.songs.length)) throw 'empty';
       let i = auto ? scheduledPlaylist() : -1;
       if (i < 0) i = Math.max(0, data.playlists.findIndex(p => p.id === store.get('pl', '')));
-      plIndex = i; makeOrder(); renderTabs(); load(false);
-      $('title').textContent = current()?.title || '';
+      plIndex = i; setQueue([...songs().keys()]); makeOrder(); renderTabs(); renderTags(); load(false);
       setInterval(checkSchedule, 30000);
     })
     .catch(e => {
       $('title').textContent = '曲がまだありません';
+      $('finder').style.display = 'none';
       $('list').outerHTML = `<div class="msg">GitHub の <b>music</b> フォルダに MP3 をアップロードすると、数分後にここに曲が表示されます。<br>
         フォルダ分け（例：music/lunch、music/dinner）するとプレイリストになります。</div>`;
     });

@@ -11,6 +11,9 @@ const config = existsSync(join(ROOT, 'config.json'))
   ? JSON.parse(readFileSync(join(ROOT, 'config.json'), 'utf8'))
   : {};
 const labels = config.labels || {};
+const tagMap = existsSync(join(ROOT, 'tags.json'))
+  ? JSON.parse(readFileSync(join(ROOT, 'tags.json'), 'utf8'))
+  : {};
 
 function walk(dir) {
   if (!existsSync(dir)) return [];
@@ -21,13 +24,25 @@ function walk(dir) {
   });
 }
 
+const toTitle = name => name.normalize('NFC').replace(/_/g, ' ').trim();
 const toSong = p => ({
-  title: basename(p, extname(p)).normalize('NFC').replace(/_/g, ' ').trim(),
+  title: toTitle(basename(p, extname(p))),
   file: relative(ROOT, p).split(sep).join('/').normalize('NFC'),
+  tags: [],
 });
 const byTitle = (a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true });
 
 const all = walk(MUSIC).map(toSong).sort(byTitle);
+
+// tags.json（タグ名 → 曲名の一覧）を各曲に付ける
+const byName = new Map(all.map(s => [s.title, s]));
+for (const [tag, titles] of Object.entries(tagMap)) {
+  for (const t of titles) {
+    const s = byName.get(toTitle(t));
+    if (!s) { console.warn(`tags.json: 「${t}」という曲が見つかりません（#${tag}）`); continue; }
+    if (!s.tags.includes(tag)) s.tags.push(tag);
+  }
+}
 const groups = new Map();
 for (const s of all) {
   const parts = s.file.split('/');
@@ -50,6 +65,6 @@ for (const [id, songs] of [...groups].sort((a, b) => rank(a[0]) - rank(b[0]) || 
   playlists.push({ id, label: labels[id] || id, songs: [...songs, ...shared].sort(byTitle) });
 }
 
-const out = { generatedAt: new Date().toISOString(), schedule: config.schedule || [], playlists };
+const out = { generatedAt: new Date().toISOString(), schedule: config.schedule || [], tags: Object.keys(tagMap), playlists };
 writeFileSync(join(ROOT, 'songs.json'), JSON.stringify(out, null, 1));
 console.log(`songs.json: ${all.length} 曲 / ${playlists.length} プレイリスト`);
