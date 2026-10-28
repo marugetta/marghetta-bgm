@@ -38,11 +38,16 @@ for (const s of all) {
   }
 }
 
+// 共通フォルダ（初期値 common）の曲は、ほかのすべてのプレイリストにも入れる
+const sharedId = config.shared || 'common';
+const shared = groups.get(sharedId) || [];
+groups.delete(sharedId);
+
 const playlists = [{ id: 'all', label: labels.all || 'すべての曲', songs: all }];
 // config.json の labels に書いた順で並べ、書いていないフォルダは後ろに名前順で並べる
 const rank = id => { const i = Object.keys(labels).indexOf(id); return i < 0 ? 1e9 : i; };
 for (const [id, songs] of [...groups].sort((a, b) => rank(a[0]) - rank(b[0]) || a[0].localeCompare(b[0]))) {
-  playlists.push({ id, label: labels[id] || id, songs });
+  playlists.push({ id, label: labels[id] || id, songs: [...songs, ...shared].sort(byTitle) });
 }
 
 const out = { generatedAt: new Date().toISOString(), schedule: config.schedule || [], playlists };

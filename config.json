@@ -1,4 +1,5 @@
 {
+  "shared": "common",
   "labels": {
     "all": "すべての曲",
     "lunch": "ランチ",
