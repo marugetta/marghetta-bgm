@@ -568,7 +568,7 @@
   // --- 歌詞（lyrics/曲名.txt を必要なときに読み込む） ---
   const lyricsCache = {};
   // かっこ書きの行のうち、楽器や演奏の言葉を含むものは指示とみなして出さない（(It’s me) などの合いの手は出す）
-  const NOTE = /\b(kick|bass|drums?|snare|shamisen|piano|strings?|solo|answer|phrase|repeat|clap|cuts?|stop|starts?|rising|layer\w*|filter\w*|battle|picking|ending|chords?|groove|unison|fills?|instruments?|flute|sax\w*|guitar|synth|beat|fade\w*|echo|crowd|tension|together|only|intro|outro|instrumental|vocal|rhythm|response|strike|left|right|side|silence|pause|bars?|hit|odaiko|taiko|glissando|melody|riff|arpeggios?|pads?|textures?|stabs?|hooks?|chops?|bells?|percussion|harmonies|lead\w*|overlap|blasts?|bend|motif|humming|tap\w*|heel|toe|click|breath|lyrics|conga\w*|enters|reappear\w*|returns?)\b/i;
+  const NOTE = /\b(kick|bass|drums?|snare|shamisen|piano|strings?|solo|answer|phrase|repeat|clap|cuts?|stop|starts?|rising|layer\w*|filter\w*|battle|picking|ending|chords?|groove|unison|fills?|instruments?|flute|sax\w*|guitar|synth|beat|fade\w*|echo|crowd|tension|together|only|intro|outro|instrumental|vocal|rhythm|response|strike|left|right|side|silence|pause|bars?|hit|odaiko|taiko|glissando|melody|riff|arpeggios?|pads?|textures?|stabs?|hooks?|chops?|bells?|percussion|harmonies|lead\w*|overlap|blasts?|bend|motif|humming|tap\w*|heel|toe|click|breath|lyrics|conga\w*|enters|reappear\w*|returns?|whistle|sfx)\b/i;
   // [ ] の行の名前がこれらの言葉を2つ以上含むか、短い名前（3語まで）で1つ含めば区間の見出し。演奏の言葉だけなら指示とみなして出さない
   const SECTION = /\b(intro|verse|pre[- ]?chorus|chorus|post[- ]?chorus|hook|bridge|outro|drop|break|breakdown|build|interlude|rap|solo|call|chant|harmony|response|ad-?libs?|refrain|coda)\b/i;
   async function openLyrics(s){
