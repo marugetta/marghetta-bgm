@@ -148,6 +148,7 @@
   .lyrics .sec{margin-top:18px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--pink);text-transform:uppercase}
   .lyrics .sec:first-child{margin-top:4px}
   .lyrics .gap{height:.8em}
+  .lyrics .gap + .sec{margin-top:6px}
   .lyr-msg{color:var(--muted);text-align:center;padding:24px 0;font-size:13px}
   li .bp{flex:none;text-align:right;font-size:15px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
   li .bp small{display:block;font-size:9px;font-weight:500;color:var(--muted);letter-spacing:.06em;margin-top:2px}
@@ -574,13 +575,20 @@
     try {
       lyricsCache[s.lyrics] ??= await fetch(urlOf(s.lyrics), { cache: 'no-cache' }).then(r => { if (!r.ok) throw 0; return r.text(); });
       body.innerHTML = '';
-      for (const line of lyricsCache[s.lyrics].replace(/\r/g, '').trim().split('\n')){
-        const el = document.createElement('div');
-        const sec = line.trim().match(/^\[(.+)\]$/); // SUNOの [Verse] [Chorus] などは見出しにする
-        if (sec){ el.className = 'sec'; el.textContent = sec[1]; }
-        else { el.className = line.trim() ? 'ln' : 'gap'; el.textContent = line; }
-        body.appendChild(el);
+      // SUNOの [Verse 1 – Soft Female Vocal] は「Verse 1」の見出しにし、続く [演奏の指示] の行は出さない。
+      // 歌詞のない区間（演奏だけ）は見出しも出さない
+      const add = (cls, text) => { const el = document.createElement('div'); el.className = cls; el.textContent = text; body.appendChild(el); };
+      let heading = null, prevBracket = false, last = '';
+      for (const raw of lyricsCache[s.lyrics].replace(/\r/g, '').trim().split('\n')){
+        const line = raw.trim();
+        const br = line.match(/^\[(.+)\]$/);
+        if (br){ if (!prevBracket) heading = br[1].split(/\s+[–—-]\s+|:/)[0].trim(); prevBracket = true; continue; }
+        prevBracket = false;
+        if (!line){ if (last === 'ln'){ add('gap', ''); last = 'gap'; } continue; }
+        if (heading){ add('sec', heading); heading = null; }
+        add('ln', raw); last = 'ln';
       }
+      if (!body.children.length) add('lyr-msg', 'この曲は歌のない曲です');
       body.scrollTop = 0;
     } catch { body.innerHTML = '<div class="lyr-msg">歌詞を読み込めませんでした</div>'; }
   }
