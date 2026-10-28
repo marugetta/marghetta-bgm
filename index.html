@@ -585,7 +585,7 @@
       let heading = null, prevBracket = false, last = '';
       for (const raw of lyricsCache[s.lyrics].replace(/\r/g, '').trim().split('\n')){
         const line = raw.trim();
-        const br = line.match(/^\[(.+)\]$/);
+        const br = line.match(/^(?:→\s*)?\[(.+)\]$/); // 「→ [Shamisen answer]」のような矢印つきも指示
         if (/^#/.test(line)) continue; // 「# 夏宵」のような見出し記号の行（作業用のメモ）は出さない
         if (/^[(（].*[)）]$/.test(line) && NOTE.test(line)) continue; // (Deep kick starts) などの演奏の指示
         if (br){
