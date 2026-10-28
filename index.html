@@ -292,6 +292,7 @@
   const STAR = '<svg viewBox="0 0 24 24"><path d="M12 17.3 18.2 21l-1.6-7 5.4-4.7-7.2-.6L12 2 9.2 8.7 2 9.3l5.4 4.7-1.6 7z"/></svg>';
   let rate = store.get('rate', 100); // テンポ（%）。音程は変えずに速さだけ変える
   let wakeLock = null;
+  let advancing = false;    // 曲の終わる少し前に、次の曲へ切り替え済み
   let pendingSwitch = null; // 自動切替：曲の終わりで切り替える
 
   const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
@@ -349,12 +350,12 @@
   const updateSub = () => { $('sub').textContent = `${data.playlists[plIndex].label}　${pos+1} / ${order.length}`; };
 
   function load(play){
-    djAbort();
+    djAbort(); advancing = false;
     const s = current();
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
+    if (play) audio.play().catch(() => {}); // 画面の更新より先に再生を始める（ロック中に音が途切れる時間を短くするため）
     showCurrent();
-    if (play) audio.play().catch(() => {});
   }
   // 画面の表示だけを、いまの曲に合わせる（DJミックスでは曲の読み込みをせずに切り替えるため）
   function showCurrent(){
@@ -516,6 +517,7 @@
   function syncChips(){
     $('autoBtn').classList.toggle('on', auto);
     $('djBtn').classList.toggle('on', djOn);
+    $('djBtn').style.display = DJ_ENABLED ? '' : 'none';
     $('djTry').classList.toggle('show', djOn);
     $('wakeBtn').classList.toggle('on', wakeWanted);
     $('shuffleBtn').classList.toggle('on', shuffle);
@@ -647,7 +649,8 @@
   // --- DJミックス：曲の終わりと次の曲の頭を、テンポと拍をそろえて重ねる ---
   // 曲ごとの拍の位置・実質の終わりは mix.json（scripts/analyze-mix.py で測定）から読む
   const MIX_BARS = 8;               // 重ねる長さ（小節）
-  let djOn = store.get('dj', false);
+  const DJ_ENABLED = false;          // 一時停止中（曲の頭と終わりに低音のある曲が少なく、つなぎの効果が出にくいため）
+  let djOn = DJ_ENABLED && store.get('dj', false);
   let ctx = null, chain = null;     // Web Audio（DJミックスを使うときだけ作る）
   let dj = null;                    // 次の曲の準備中・ミックス中の状態
   const other = () => decks.find(d => d !== audio);
@@ -776,7 +779,7 @@
     setLevel(inc, 1, 0); setLevel(audio, 1, 0);
     $('djBadge').classList.remove('show');
   }
-  setInterval(djTick, 50);
+  if (DJ_ENABLED) setInterval(djTick, 50);
   window.__dj = () => dj && { at: dj.at, inAt: dj.inAt, rateIn: dj.rateIn, matched: dj.matched, started: dj.started, next: dj.ns.title }; // 動作確認用
   $('djBtn').onclick = () => {
     djOn = !djOn; store.set('dj', djOn); syncChips();
@@ -784,7 +787,7 @@
     else { djAbort(); toast('DJミックス OFF'); }
   };
   // 前回 ON のまま開いたときは、最初の画面タッチで準備する（音の処理はタッチの中でしか始められないため）
-  document.addEventListener('pointerdown', () => { if (djOn){ initGraph(); unlockDecks(); } }, { once: true, capture: true });
+  if (DJ_ENABLED) document.addEventListener('pointerdown', () => { if (djOn){ initGraph(); unlockDecks(); } }, { once: true, capture: true });
 
   const fill = el => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
   $('vol').oninput = e => { for (const d of decks) d.volume = e.target.value/100; store.set('vol', +e.target.value); fill(e.target); };
@@ -792,16 +795,24 @@
 
   // 2台の audio のうち、いま主役の方のイベントだけを扱う
   const onDeck = (ev, fn) => decks.forEach(d => d.addEventListener(ev, () => { if (d === audio) fn(); }));
-  onDeck('play', () => { $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
-  onDeck('pause', () => { if (dj?.started) djAbort(); $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
-  onDeck('ended', () => dj?.started ? djFinish() : next(true));
+  onDeck('play', () => { advancing = false; setPlaybackState('playing'); $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
+  onDeck('pause', () => { if (dj?.started) djAbort(); setPlaybackState('paused'); $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
+  onDeck('ended', () => { if (dj?.started) djFinish(); else if (!advancing) next(true); });
   onDeck('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
   onDeck('error', () => { if (!audio.src) return; djAbort(); toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
   onDeck('timeupdate', () => {
+    // 画面ロック中も次の曲へ進めるよう、曲が終わる少し前に同じ audio のまま次の曲に切り替える。
+    // 音が完全に止まると、iPhone はその瞬間にページを止めてしまい、次の曲を始められないことがあるため
+    const hasNext = pendingSwitch != null || pos < order.length - 1 || repeat;
+    if (!dj && !advancing && hasNext && !audio.paused && audio.duration && audio.duration - audio.currentTime < 1.5){
+      advancing = true; next(true);
+    }
     $('cur').textContent = fmt(audio.currentTime); $('dur').textContent = fmt(audio.duration);
     if (audio.duration){ $('seek').value = audio.currentTime/audio.duration*1000; fill($('seek')); }
   });
   document.addEventListener('visibilitychange', applyWake);
+  // ロック画面の再生・一時停止の表示を合わせる
+  function setPlaybackState(st){ if ('mediaSession' in navigator) try { navigator.mediaSession.playbackState = st; } catch {} }
   if ('mediaSession' in navigator){
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
