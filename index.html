@@ -75,6 +75,12 @@
   .btn:active{transform:scale(.93)}
   .vol{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:12px}
   .vol input{flex:1}
+  .speed{display:flex;align-items:center;gap:10px;margin-top:4px;font-size:12px}
+  .speed span{flex:none;opacity:.9}
+  .speed input{flex:1}
+  .rate{flex:none;min-width:58px;border:none;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;
+    background:rgba(255,255,255,.22);color:#fff;cursor:pointer;font-variant-numeric:tabular-nums}
+  .rate.changed{background:#fff;color:var(--pink-d)}
 
   /* 検索・タグ（スクロールしても上に残る） */
   .finder{position:sticky;top:0;z-index:5;background:var(--cream);padding:12px 0 8px;
@@ -177,6 +183,8 @@
     </button>
   </div>
   <div class="vol" id="volRow">🔈<input type="range" id="vol" min="0" max="100" value="70" aria-label="音量">🔊</div>
+  <div class="speed"><span>テンポ</span><input type="range" id="rate" min="80" max="120" step="5" value="100" aria-label="テンポ">
+    <button class="rate" id="rateBtn" title="100%に戻す">100%</button></div>
 </section>
 
 <section class="finder" id="finder">
@@ -224,11 +232,13 @@
     { id: 'mid',  label: 'ふつう',   max: 128 },
     { id: 'fast', label: 'アップテンポ', max: Infinity },
   ];
-  const tempoOf = s => s.bpm ? TEMPOS.find(t => s.bpm < t.max).id : '';
+  const bpmOf = s => s.bpm ? Math.round(s.bpm * rate / 100) : 0; // テンポ変更後のBPM
+  const tempoOf = s => s.bpm ? TEMPOS.find(t => bpmOf(s) < t.max).id : '';
   let shuffle = store.get('shuffle', true);
   let repeat = store.get('repeat', true);
   let auto = store.get('auto', true);
   let wakeWanted = store.get('wake', true);
+  let rate = store.get('rate', 100); // テンポ（%）。音程は変えずに速さだけ変える
   let wakeLock = null;
   let pendingSwitch = null; // 自動切替：曲の終わりで切り替える
 
@@ -290,7 +300,7 @@
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
     $('title').textContent = s.title;
-    $('bpm').textContent = s.bpm ? `♩ ${s.bpm} BPM` : ''; $('bpm').classList.toggle('show', !!s.bpm);
+    showBpm();
     updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
@@ -391,7 +401,7 @@
       const s = songs()[i];
       const li = document.createElement('li');
       li.className = (i === cur ? 'cur' : '') + (queueLabel && !queue.includes(i) ? ' out' : '');
-      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>${s.bpm ? `<span class="bp">${s.bpm}<small>BPM</small></span>` : ''}`;
+      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>${s.bpm ? `<span class="bp">${bpmOf(s)}<small>BPM</small></span>` : ''}`;
       li.querySelector('.t').textContent = s.title;
       for (const t of s.tags || []){ const sp = document.createElement('span'); sp.textContent = '#' + t; li.querySelector('.tg').appendChild(sp); }
       // タップした曲から、いま表示している曲の範囲で再生
@@ -457,6 +467,23 @@
   $('playShfBtn').onclick = () => playVisible('shf');
   $('qchip').onclick = () => { setQueue([...songs().keys()]); makeOrder(order[pos]); updateSub(); renderList();
     toast('全曲の再生に戻しました'); };
+  function showBpm(){
+    const s = current();
+    $('bpm').textContent = s?.bpm ? `♩ ${bpmOf(s)} BPM${rate !== 100 ? `（${rate}%）` : ''}` : '';
+    $('bpm').classList.toggle('show', !!s?.bpm);
+  }
+  // 音程を保ったまま再生速度を変える（曲が変わっても defaultPlaybackRate で引き継ぐ）
+  function applyRate(){
+    audio.preservesPitch = audio.mozPreservesPitch = audio.webkitPreservesPitch = true;
+    audio.defaultPlaybackRate = audio.playbackRate = rate / 100;
+    $('rate').value = rate; fill($('rate'));
+    $('rateBtn').textContent = rate + '%'; $('rateBtn').classList.toggle('changed', rate !== 100);
+    showBpm();
+  }
+  function setRate(v){ rate = v; store.set('rate', rate); applyRate(); renderTempos(); renderList(); }
+  $('rate').oninput = e => setRate(+e.target.value);
+  $('rateBtn').onclick = () => { if (rate !== 100){ setRate(100); toast('テンポを100%に戻しました'); } };
+
   const fill = el => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
   $('vol').oninput = e => { audio.volume = e.target.value/100; store.set('vol', +e.target.value); fill(e.target); };
   $('seek').oninput = e => { if (audio.duration) audio.currentTime = e.target.value/1000*audio.duration; fill(e.target); };
@@ -464,6 +491,7 @@
   audio.addEventListener('play', () => { $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
   audio.addEventListener('pause', () => { $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
   audio.addEventListener('ended', () => next(true));
+  audio.addEventListener('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
   audio.addEventListener('error', () => { if (!audio.src) return; toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
   audio.addEventListener('timeupdate', () => {
     $('cur').textContent = fmt(audio.currentTime); $('dur').textContent = fmt(audio.duration);
@@ -479,6 +507,7 @@
 
   // --- 起動 ---
   const v = store.get('vol', 70); $('vol').value = v; audio.volume = v/100; fill($('vol'));
+  applyRate();
   syncChips();
   fetch('songs.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => { if (!r.ok) throw 0; return r.json(); })
