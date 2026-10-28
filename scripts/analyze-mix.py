@@ -65,6 +65,9 @@ def analyze(path):
     on = np.nonzero(rms > loud * 0.1)[0]
     start = float(librosa.frames_to_time(on[0], sr=sr, hop_length=hop)) if len(on) else 0.0
     end = float(librosa.frames_to_time(on[-1], sr=sr, hop_length=hop)) if len(on) else dur
+    # 本当に音がなくなる所（余韻やフェードアウトは残す）。曲の切り替えはここで行う
+    snd = np.nonzero(rms > loud * 0.01)[0]
+    silence = float(librosa.frames_to_time(snd[-1] + 1, sr=sr, hop_length=hop)) if len(snd) else dur
 
     # キー
     chroma = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=2048).mean(axis=1)
@@ -73,7 +76,7 @@ def analyze(path):
     _, k, minor = best
     key = (CAMELOT_MINOR if minor else CAMELOT_MAJOR)[k]
 
-    return {'beat': round(period0, 5), 'start': round(start, 2), 'end': round(end, 2),
+    return {'beat': round(period0, 5), 'start': round(start, 2), 'end': round(end, 2), 'silence': round(min(silence, dur), 2),
             'duration': round(dur, 2), 'key': key,
             'in': fit(start, start + 45), 'out': fit(end - 45, end)}
 
