@@ -353,7 +353,7 @@
     djAbort(); advancing = false;
     const s = current();
     if (!s){ $('title').textContent = '曲がありません'; return; }
-    audio.src = urlOf(s.file);
+    audio.src = prefetched.get(s.file) || urlOf(s.file); // 先に読み込んでおいた曲があれば、それを使う
     if (play) audio.play().catch(() => {}); // 画面の更新より先に再生を始める（ロック中に音が途切れる時間を短くするため）
     showCurrent();
   }
@@ -369,6 +369,25 @@
     if ('mediaSession' in navigator){
       navigator.mediaSession.metadata = new MediaMetadata({ title: s.title, artist: 'マルゲッタ', album: data.playlists[plIndex].label });
     }
+  }
+
+  // --- 次の曲の先読み ---
+  // 次の曲をまるごと端末に読み込んでおく。電車のトンネルなどで電波が切れても、画面ロック中に次の曲を止まらずに始められるように
+  const prefetched = new Map();   // 曲のファイル → 端末内の URL（blob:）
+  let prefetching = null;
+  async function prefetchNext(){
+    if (pendingSwitch != null || pos >= order.length - 1) return; // 最後の曲のあと（並び直し）や時間帯の切替時は、その場で読み込む
+    const s = current(), ns = songs()[order[pos + 1]];
+    if (!ns || prefetched.has(ns.file) || prefetching === ns.file) return;
+    prefetching = ns.file;
+    try {
+      const r = await fetch(urlOf(ns.file));
+      if (!r.ok) throw 0;
+      const url = URL.createObjectURL(await r.blob());
+      // いま流れている曲と次の曲の分だけ残し、ほかは片づける（端末のメモリを使いすぎないように）
+      for (const [f, u] of prefetched) if (f !== s?.file && f !== ns.file){ URL.revokeObjectURL(u); prefetched.delete(f); }
+      prefetched.set(ns.file, url);
+    } catch {} finally { if (prefetching === ns.file) prefetching = null; }
   }
 
   function next(auto_){
@@ -795,11 +814,24 @@
 
   // 2台の audio のうち、いま主役の方のイベントだけを扱う
   const onDeck = (ev, fn) => decks.forEach(d => d.addEventListener(ev, () => { if (d === audio) fn(); }));
-  onDeck('play', () => { advancing = false; setPlaybackState('playing'); $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
+  onDeck('play', () => { advancing = false; setTimeout(prefetchNext, 3000); setPlaybackState('playing'); $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
   onDeck('pause', () => { if (dj?.started) djAbort(); setPlaybackState('paused'); $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
   onDeck('ended', () => { if (dj?.started) djFinish(); else if (!advancing) next(true); });
   onDeck('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
-  onDeck('error', () => { if (!audio.src) return; djAbort(); toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
+  // 読み込めないとき：電波がない（または続けて失敗する）なら、飛ばさずに電波が戻るのを待って同じ曲からやり直す
+  let failCount = 0, waitOnline = false;
+  onDeck('error', () => {
+    if (!audio.src) return;
+    djAbort();
+    if (!navigator.onLine || ++failCount >= 3){
+      waitOnline = true; failCount = 0;
+      toast('電波が戻ったら再開します');
+      return;
+    }
+    toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800);
+  });
+  onDeck('playing', () => { failCount = 0; });
+  window.addEventListener('online', () => { if (waitOnline){ waitOnline = false; load(true); } });
   onDeck('timeupdate', () => {
     // 画面ロック中も次の曲へ進めるよう、曲が終わる少し前に同じ audio のまま次の曲に切り替える。
     // 音が完全に止まると、iPhone はその瞬間にページを止めてしまい、次の曲を始められないことがあるため
