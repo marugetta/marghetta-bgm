@@ -1,0 +1,11 @@
+{
+  "labels": {
+    "all": "すべての曲",
+    "lunch": "ランチ",
+    "dinner": "ディナー"
+  },
+  "schedule": [
+    { "playlist": "lunch",  "start": "10:00", "end": "16:00" },
+    { "playlist": "dinner", "start": "16:00", "end": "10:00" }
+  ]
+}
