@@ -589,7 +589,7 @@
         if (/^#/.test(line)) continue; // 「# 夏宵」のような見出し記号の行（作業用のメモ）は出さない
         if (/^[(（].*[)）]$/.test(line) && NOTE.test(line)) continue; // (Deep kick starts) などの演奏の指示
         if (br){
-          const name = br[1].split(/\s+[–—-]\s+|:/)[0].trim();
+          const name = br[1].split(/\s+[–—\/-]\s+|:/)[0].trim();
           const nSec = (name.match(new RegExp(SECTION.source, 'gi')) || []).length;
           const isSection = nSec >= 2 || (nSec === 1 && name.split(/\s+/).length <= 3);
           if (!prevBracket && (isSection || !NOTE.test(br[1]))) heading = name;
