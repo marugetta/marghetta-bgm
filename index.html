@@ -568,8 +568,8 @@
   // --- 歌詞（lyrics/曲名.txt を必要なときに読み込む） ---
   const lyricsCache = {};
   // かっこ書きの行のうち、楽器や演奏の言葉を含むものは指示とみなして出さない（(It’s me) などの合いの手は出す）
-  const NOTE = /\b(kick|bass|drums?|snare|shamisen|piano|strings?|solo|answer|phrase|repeat|clap|cuts?|stop|starts?|rising|layer\w*|filter\w*|battle|picking|ending|chords?|groove|unison|fills?|instruments?|flute|sax\w*|guitar|synth|beat|fade\w*|echo|crowd|tension|together|only|intro|outro|instrumental|vocal|rhythm|response|strike|left|right|side|silence|pause|bars?|hit|odaiko|taiko|glissando|melody|riff|arpeggios?|pads?|textures?|stabs?|hooks?|chops?|bells?|percussion|harmonies)\b/i;
-  // [ ] の行がこれらの言葉を含めば区間の見出し。含まず演奏の言葉だけなら指示とみなして出さない
+  const NOTE = /\b(kick|bass|drums?|snare|shamisen|piano|strings?|solo|answer|phrase|repeat|clap|cuts?|stop|starts?|rising|layer\w*|filter\w*|battle|picking|ending|chords?|groove|unison|fills?|instruments?|flute|sax\w*|guitar|synth|beat|fade\w*|echo|crowd|tension|together|only|intro|outro|instrumental|vocal|rhythm|response|strike|left|right|side|silence|pause|bars?|hit|odaiko|taiko|glissando|melody|riff|arpeggios?|pads?|textures?|stabs?|hooks?|chops?|bells?|percussion|harmonies|lead\w*|overlap|blasts?|bend|motif|humming)\b/i;
+  // [ ] の行の名前がこれらの言葉を2つ以上含むか、短い名前（3語まで）で1つ含めば区間の見出し。演奏の言葉だけなら指示とみなして出さない
   const SECTION = /\b(intro|verse|pre[- ]?chorus|chorus|post[- ]?chorus|hook|bridge|outro|drop|break|breakdown|build|interlude|rap|solo|call|chant|harmony|response|ad-?libs?|refrain|coda)\b/i;
   async function openLyrics(s){
     if (!s?.lyrics) return;
@@ -590,7 +590,9 @@
         if (/^[(（].*[)）]$/.test(line) && NOTE.test(line)) continue; // (Deep kick starts) などの演奏の指示
         if (br){
           const name = br[1].split(/\s+[–—-]\s+|:/)[0].trim();
-          if (!prevBracket && (SECTION.test(name) || !NOTE.test(br[1]))) heading = name;
+          const nSec = (name.match(new RegExp(SECTION.source, 'gi')) || []).length;
+          const isSection = nSec >= 2 || (nSec === 1 && name.split(/\s+/).length <= 3);
+          if (!prevBracket && (isSection || !NOTE.test(br[1]))) heading = name;
           prevBracket = true; continue;
         }
         prevBracket = false;
