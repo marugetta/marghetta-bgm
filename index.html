@@ -589,7 +589,7 @@
         prevBracket = false;
         if (!line){ if (last === 'ln'){ add('gap', ''); last = 'gap'; } continue; }
         if (heading){ add('sec', heading); heading = null; }
-        add('ln', raw); last = 'ln';
+        add('ln', raw.replace(/\*\*/g, '')); last = 'ln'; // **太字** の記号は外す
       }
       if (!body.children.length) add('lyr-msg', 'この曲は歌のない曲です');
       body.scrollTop = 0;
