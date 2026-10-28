@@ -1,0 +1,1277 @@
+{
+ "After midnight": {
+  "beat": 0.45442,
+  "start": 0.5,
+  "end": 298.02,
+  "duration": 299.6,
+  "key": "4A",
+  "in": {
+   "beat": 0.4581,
+   "downbeat": 0.665
+  },
+  "out": {
+   "beat": 0.45659,
+   "downbeat": 253.303
+  }
+ },
+ "Another night ~Brust Jazz Session Ver. ~": {
+  "beat": 0.4694,
+  "start": 0.58,
+  "end": 276.68,
+  "duration": 277.32,
+  "key": "6A",
+  "in": {
+   "beat": 0.47025,
+   "downbeat": 0.821
+  },
+  "out": {
+   "beat": 0.46876,
+   "downbeat": 233.267
+  }
+ },
+ "Beer Fever 2": {
+  "beat": 0.42358,
+  "start": 0.24,
+  "end": 295.13,
+  "duration": 295.92,
+  "key": "4A",
+  "in": {
+   "beat": 0.42322,
+   "downbeat": 1.61
+  },
+  "out": {
+   "beat": 0.42279,
+   "downbeat": 251.062
+  }
+ },
+ "Between Yesterday and Today （リミックス）": {
+  "beat": 0.45719,
+  "start": 0.14,
+  "end": 325.65,
+  "duration": 326.56,
+  "key": "8A",
+  "in": {
+   "beat": 0.45544,
+   "downbeat": 1.503
+  },
+  "out": {
+   "beat": 0.45577,
+   "downbeat": 282.469
+  }
+ },
+ "Black light": {
+  "beat": 0.46209,
+  "start": 0.95,
+  "end": 340.68,
+  "duration": 341.2,
+  "key": "6A",
+  "in": {
+   "beat": 0.46431,
+   "downbeat": 1.11
+  },
+  "out": {
+   "beat": 0.46225,
+   "downbeat": 296.96
+  }
+ },
+ "Butterfly Effect": {
+  "beat": 0.45661,
+  "start": 1.32,
+  "end": 337.19,
+  "duration": 338.4,
+  "key": "9B",
+  "in": {
+   "beat": 0.45683,
+   "downbeat": 2.995
+  },
+  "out": {
+   "beat": 0.45653,
+   "downbeat": 293.403
+  }
+ },
+ "COCA COLA with K": {
+  "beat": 0.46002,
+  "start": 0.87,
+  "end": 231.5,
+  "duration": 232.0,
+  "key": "7B",
+  "in": {
+   "beat": 0.46135,
+   "downbeat": 1.909
+  },
+  "out": {
+   "beat": 0.46094,
+   "downbeat": 187.672
+  }
+ },
+ "COME MY WAY": {
+  "beat": 0.44829,
+  "start": 0.19,
+  "end": 271.05,
+  "duration": 272.28,
+  "key": "7B",
+  "in": {
+   "beat": 0.44744,
+   "downbeat": 1.572
+  },
+  "out": {
+   "beat": 0.44877,
+   "downbeat": 227.614
+  }
+ },
+ "CRAZY FOR YOUR LOVE": {
+  "beat": 0.44445,
+  "start": 0.41,
+  "end": 313.27,
+  "duration": 313.28,
+  "key": "6A",
+  "in": {
+   "beat": 0.44461,
+   "downbeat": 0.92
+  },
+  "out": {
+   "beat": 0.44509,
+   "downbeat": 268.513
+  }
+ },
+ "Carry me into the glow": {
+  "beat": 0.43124,
+  "start": 1.18,
+  "end": 313.92,
+  "duration": 313.96,
+  "key": "1A",
+  "in": {
+   "beat": 0.43046,
+   "downbeat": 1.645
+  },
+  "out": {
+   "beat": 0.43207,
+   "downbeat": 269.154
+  }
+ },
+ "Contraste": {
+  "beat": 0.45128,
+  "start": 0.86,
+  "end": 300.15,
+  "duration": 301.2,
+  "key": "10B",
+  "in": {
+   "beat": 0.45027,
+   "downbeat": 1.075
+  },
+  "out": {
+   "beat": 0.45187,
+   "downbeat": 256.264
+  }
+ },
+ "DRIP DRIP DROP!": {
+  "beat": 0.45346,
+  "start": 0.17,
+  "end": 294.03,
+  "duration": 294.8,
+  "key": "3A",
+  "in": {
+   "beat": 0.45393,
+   "downbeat": 1.874
+  },
+  "out": {
+   "beat": 0.45172,
+   "downbeat": 249.561
+  }
+ },
+ "Don't Say Goodnight": {
+  "beat": 0.4498,
+  "start": 0.44,
+  "end": 260.86,
+  "duration": 261.6,
+  "key": "5A",
+  "in": {
+   "beat": 0.4493,
+   "downbeat": 1.319
+  },
+  "out": {
+   "beat": 0.45024,
+   "downbeat": 216.87
+  }
+ },
+ "ENDLESS SEN": {
+  "beat": 0.45351,
+  "start": 1.54,
+  "end": 276.39,
+  "duration": 278.08,
+  "key": "11A",
+  "in": {
+   "beat": 0.45207,
+   "downbeat": 1.985
+  },
+  "out": {
+   "beat": 0.4519,
+   "downbeat": 232.784
+  }
+ },
+ "Flip-flip": {
+  "beat": 0.45111,
+  "start": 0.41,
+  "end": 269.5,
+  "duration": 269.8,
+  "key": "7A",
+  "in": {
+   "beat": 0.45138,
+   "downbeat": 0.483
+  },
+  "out": {
+   "beat": 0.45115,
+   "downbeat": 224.675
+  }
+ },
+ "Glitter POP": {
+  "beat": 0.4474,
+  "start": 0.1,
+  "end": 290.68,
+  "duration": 291.6,
+  "key": "8A",
+  "in": {
+   "beat": 0.44907,
+   "downbeat": 0.271
+  },
+  "out": {
+   "beat": 0.44875,
+   "downbeat": 247.193
+  }
+ },
+ "Hello Goodbye": {
+  "beat": 0.45032,
+  "start": 0.21,
+  "end": 285.98,
+  "duration": 287.88,
+  "key": "5B",
+  "in": {
+   "beat": 0.45065,
+   "downbeat": 0.379
+  },
+  "out": {
+   "beat": 0.45032,
+   "downbeat": 241.281
+  }
+ },
+ "I Can't Let You Go": {
+  "beat": 0.45477,
+  "start": 0.2,
+  "end": 329.79,
+  "duration": 329.8,
+  "key": "6B",
+  "in": {
+   "beat": 0.45529,
+   "downbeat": 1.615
+  },
+  "out": {
+   "beat": 0.45384,
+   "downbeat": 285.188
+  }
+ },
+ "I Don't Wanna Lose You": {
+  "beat": 0.4619,
+  "start": 0.13,
+  "end": 360.71,
+  "duration": 363.08,
+  "key": "6A",
+  "in": {
+   "beat": 0.461,
+   "downbeat": 0.901
+  },
+  "out": {
+   "beat": 0.46097,
+   "downbeat": 316.316
+  }
+ },
+ "It’s Maru Getta tonight": {
+  "beat": 0.40992,
+  "start": 1.07,
+  "end": 232.81,
+  "duration": 233.16,
+  "key": "3A",
+  "in": {
+   "beat": 0.4108,
+   "downbeat": 1.754
+  },
+  "out": {
+   "beat": 0.41083,
+   "downbeat": 188.111
+  }
+ },
+ "Ka･Gu・Ya ~ Marugetta Wagakki House ~": {
+  "beat": 0.44107,
+  "start": 1.28,
+  "end": 191.19,
+  "duration": 193.0,
+  "key": "4A",
+  "in": {
+   "beat": 0.4401,
+   "downbeat": 1.877
+  },
+  "out": {
+   "beat": 0.4426,
+   "downbeat": 146.802
+  }
+ },
+ "Ki-Ra-Ri ~ 和楽器ハウス 姫神 ~": {
+  "beat": 0.45615,
+  "start": 0.44,
+  "end": 357.29,
+  "duration": 357.32,
+  "key": "6A",
+  "in": {
+   "beat": 0.45488,
+   "downbeat": 1.044
+  },
+  "out": {
+   "beat": 0.45621,
+   "downbeat": 312.407
+  }
+ },
+ "LOVE Echo": {
+  "beat": 0.45905,
+  "start": 0.45,
+  "end": 305.81,
+  "duration": 308.12,
+  "key": "4A",
+  "in": {
+   "beat": 0.45957,
+   "downbeat": 0.664
+  },
+  "out": {
+   "beat": 0.45693,
+   "downbeat": 261.578
+  }
+ },
+ "LOVE ON BEAT": {
+  "beat": 0.45195,
+  "start": 0.15,
+  "end": 302.27,
+  "duration": 302.8,
+  "key": "1A",
+  "in": {
+   "beat": 0.45021,
+   "downbeat": 1.587
+  },
+  "out": {
+   "beat": 0.45171,
+   "downbeat": 259.015
+  }
+ },
+ "Let the rhythm set me free ~JAZZ HOUSE Ver.~": {
+  "beat": 0.46249,
+  "start": 0.0,
+  "end": 269.27,
+  "duration": 269.88,
+  "key": "4A",
+  "in": {
+   "beat": 0.46466,
+   "downbeat": 0.998
+  },
+  "out": {
+   "beat": 0.46151,
+   "downbeat": 224.563
+  }
+ },
+ "Little Happiness": {
+  "beat": 0.44835,
+  "start": 0.12,
+  "end": 326.53,
+  "duration": 328.8,
+  "key": "6B",
+  "in": {
+   "beat": 0.44933,
+   "downbeat": 0.543
+  },
+  "out": {
+   "beat": 0.44939,
+   "downbeat": 282.84
+  }
+ },
+ "Little by Little": {
+  "beat": 0.44687,
+  "start": 1.04,
+  "end": 331.14,
+  "duration": 332.76,
+  "key": "7B",
+  "in": {
+   "beat": 0.44698,
+   "downbeat": 2.335
+  },
+  "out": {
+   "beat": 0.44692,
+   "downbeat": 287.396
+  }
+ },
+ "Lucky, lucky, lucky tonight ~ J-POP Stylish & Catchy ~": {
+  "beat": 0.44893,
+  "start": 0.22,
+  "end": 286.86,
+  "duration": 287.52,
+  "key": "4A",
+  "in": {
+   "beat": 0.44734,
+   "downbeat": 1.107
+  },
+  "out": {
+   "beat": 0.44992,
+   "downbeat": 243.077
+  }
+ },
+ "MOST PRESIOUS PIANOSAX": {
+  "beat": 0.46096,
+  "start": 0.48,
+  "end": 263.76,
+  "duration": 264.96,
+  "key": "3A",
+  "in": {
+   "beat": 0.46171,
+   "downbeat": 0.628
+  },
+  "out": {
+   "beat": 0.46162,
+   "downbeat": 219.396
+  }
+ },
+ "Marugetta": {
+  "beat": 0.4606,
+  "start": 0.16,
+  "end": 269.62,
+  "duration": 270.0,
+  "key": "4A",
+  "in": {
+   "beat": 0.46197,
+   "downbeat": 1.734
+  },
+  "out": {
+   "beat": 0.46047,
+   "downbeat": 226.428
+  }
+ },
+ "Marugetta Got Me On Repeat": {
+  "beat": 0.46015,
+  "start": 0.0,
+  "end": 221.66,
+  "duration": 222.44,
+  "key": "7B",
+  "in": {
+   "beat": 0.46151,
+   "downbeat": 0.498
+  },
+  "out": {
+   "beat": 0.4614,
+   "downbeat": 178.198
+  }
+ },
+ "OUR STORY": {
+  "beat": 0.45562,
+  "start": 0.51,
+  "end": 302.92,
+  "duration": 304.0,
+  "key": "7B",
+  "in": {
+   "beat": 0.45429,
+   "downbeat": 1.714
+  },
+  "out": {
+   "beat": 0.45765,
+   "downbeat": 259.528
+  }
+ },
+ "One More Night": {
+  "beat": 0.4528,
+  "start": 0.91,
+  "end": 332.53,
+  "duration": 333.2,
+  "key": "4A",
+  "in": {
+   "beat": 0.45175,
+   "downbeat": 1.919
+  },
+  "out": {
+   "beat": 0.45436,
+   "downbeat": 288.522
+  }
+ },
+ "One more BITE!": {
+  "beat": 0.45807,
+  "start": 0.1,
+  "end": 296.39,
+  "duration": 297.76,
+  "key": "8A",
+  "in": {
+   "beat": 0.45594,
+   "downbeat": 1.881
+  },
+  "out": {
+   "beat": 0.45856,
+   "downbeat": 251.66
+  }
+ },
+ "PA-PA-PA! (Trumpet Addiction)": {
+  "beat": 0.45022,
+  "start": 0.15,
+  "end": 293.22,
+  "duration": 293.6,
+  "key": "6A",
+  "in": {
+   "beat": 0.4505,
+   "downbeat": 1.065
+  },
+  "out": {
+   "beat": 0.4513,
+   "downbeat": 248.735
+  }
+ },
+ "PIANO CHOPS !": {
+  "beat": 0.44763,
+  "start": 0.51,
+  "end": 351.46,
+  "duration": 352.32,
+  "key": "6A",
+  "in": {
+   "beat": 0.44671,
+   "downbeat": 1.826
+  },
+  "out": {
+   "beat": 0.44822,
+   "downbeat": 307.443
+  }
+ },
+ "PIANO REturn": {
+  "beat": 0.46194,
+  "start": 0.0,
+  "end": 241.63,
+  "duration": 243.68,
+  "key": "4A",
+  "in": {
+   "beat": 0.46242,
+   "downbeat": 0.714
+  },
+  "out": {
+   "beat": 0.46058,
+   "downbeat": 198.227
+  }
+ },
+ "PIANO　JAM": {
+  "beat": 0.45295,
+  "start": 0.16,
+  "end": 299.87,
+  "duration": 302.68,
+  "key": "10A",
+  "in": {
+   "beat": 0.45557,
+   "downbeat": 0.173
+  },
+  "out": {
+   "beat": 0.45185,
+   "downbeat": 256.162
+  }
+ },
+ "PRESENT": {
+  "beat": 0.4595,
+  "start": 0.2,
+  "end": 206.27,
+  "duration": 207.12,
+  "key": "9A",
+  "in": {
+   "beat": 0.4611,
+   "downbeat": 1.429
+  },
+  "out": {
+   "beat": 0.46006,
+   "downbeat": 161.495
+  }
+ },
+ "Pa-Pi-Pu Summer Lights": {
+  "beat": 0.4503,
+  "start": 0.0,
+  "end": 265.43,
+  "duration": 268.8,
+  "key": "3B",
+  "in": {
+   "beat": 0.4508,
+   "downbeat": 1.273
+  },
+  "out": {
+   "beat": 0.45025,
+   "downbeat": 220.804
+  }
+ },
+ "Paper crown": {
+  "beat": 0.45467,
+  "start": 0.31,
+  "end": 300.62,
+  "duration": 301.88,
+  "key": "7A",
+  "in": {
+   "beat": 0.45681,
+   "downbeat": 0.364
+  },
+  "out": {
+   "beat": 0.45224,
+   "downbeat": 255.632
+  }
+ },
+ "Piano vs": {
+  "beat": 0.45154,
+  "start": 0.06,
+  "end": 184.25,
+  "duration": 184.96,
+  "key": "6A",
+  "in": {
+   "beat": 0.45032,
+   "downbeat": 0.556
+  },
+  "out": {
+   "beat": 0.44976,
+   "downbeat": 140.51
+  }
+ },
+ "REMIND": {
+  "beat": 0.45277,
+  "start": 0.12,
+  "end": 307.35,
+  "duration": 307.6,
+  "key": "5B",
+  "in": {
+   "beat": 0.45534,
+   "downbeat": 0.449
+  },
+  "out": {
+   "beat": 0.45159,
+   "downbeat": 264.097
+  }
+ },
+ "Rainy day on the tapping": {
+  "beat": 0.45534,
+  "start": 0.33,
+  "end": 285.7,
+  "duration": 286.92,
+  "key": "6A",
+  "in": {
+   "beat": 0.45485,
+   "downbeat": 1.88
+  },
+  "out": {
+   "beat": 0.45563,
+   "downbeat": 241.335
+  }
+ },
+ "Raspy PIANO （リミックス）": {
+  "beat": 0.45533,
+  "start": 0.19,
+  "end": 290.91,
+  "duration": 291.72,
+  "key": "10B",
+  "in": {
+   "beat": 0.45244,
+   "downbeat": 1.113
+  },
+  "out": {
+   "beat": 0.45417,
+   "downbeat": 246.983
+  }
+ },
+ "SAKURA EMOTION": {
+  "beat": 0.45438,
+  "start": 0.3,
+  "end": 273.58,
+  "duration": 274.8,
+  "key": "6A",
+  "in": {
+   "beat": 0.45233,
+   "downbeat": 0.797
+  },
+  "out": {
+   "beat": 0.45409,
+   "downbeat": 230.041
+  }
+ },
+ "SAX ARENA": {
+  "beat": 0.43985,
+  "start": 0.56,
+  "end": 361.64,
+  "duration": 362.4,
+  "key": "6A",
+  "in": {
+   "beat": 0.43855,
+   "downbeat": 2.285
+  },
+  "out": {
+   "beat": 0.44088,
+   "downbeat": 317.279
+  }
+ },
+ "SAX Refline": {
+  "beat": 0.45251,
+  "start": 1.24,
+  "end": 284.94,
+  "duration": 287.04,
+  "key": "6A",
+  "in": {
+   "beat": 0.45399,
+   "downbeat": 1.909
+  },
+  "out": {
+   "beat": 0.45152,
+   "downbeat": 240.121
+  }
+ },
+ "SWING TONIGHT": {
+  "beat": 0.46064,
+  "start": 0.56,
+  "end": 292.22,
+  "duration": 293.24,
+  "key": "10B",
+  "in": {
+   "beat": 0.46161,
+   "downbeat": 0.958
+  },
+  "out": {
+   "beat": 0.46112,
+   "downbeat": 247.854
+  }
+ },
+ "Same X'mas Same LOVE": {
+  "beat": 0.44289,
+  "start": 0.13,
+  "end": 405.27,
+  "duration": 407.04,
+  "key": "6B",
+  "in": {
+   "beat": 0.44295,
+   "downbeat": 1.674
+  },
+  "out": {
+   "beat": 0.44434,
+   "downbeat": 360.905
+  }
+ },
+ "Set my heart on fire": {
+  "beat": 0.46709,
+  "start": 0.23,
+  "end": 310.3,
+  "duration": 311.56,
+  "key": "1B",
+  "in": {
+   "beat": 0.46921,
+   "downbeat": 2.06
+  },
+  "out": {
+   "beat": 0.4691,
+   "downbeat": 265.627
+  }
+ },
+ "Stay Close Tonight": {
+  "beat": 0.46187,
+  "start": 0.34,
+  "end": 240.59,
+  "duration": 243.0,
+  "key": "1A",
+  "in": {
+   "beat": 0.46218,
+   "downbeat": 0.487
+  },
+  "out": {
+   "beat": 0.46144,
+   "downbeat": 196.22
+  }
+ },
+ "Stay With Me Tonight": {
+  "beat": 0.45648,
+  "start": 0.28,
+  "end": 381.7,
+  "duration": 383.16,
+  "key": "4A",
+  "in": {
+   "beat": 0.45765,
+   "downbeat": 0.509
+  },
+  "out": {
+   "beat": 0.45686,
+   "downbeat": 338.344
+  }
+ },
+ "Stay a little longer": {
+  "beat": 0.45662,
+  "start": 0.36,
+  "end": 327.83,
+  "duration": 329.24,
+  "key": "3A",
+  "in": {
+   "beat": 0.45742,
+   "downbeat": 0.883
+  },
+  "out": {
+   "beat": 0.45776,
+   "downbeat": 283.682
+  }
+ },
+ "Stay in My Heart": {
+  "beat": 0.46021,
+  "start": 0.09,
+  "end": 305.76,
+  "duration": 308.36,
+  "key": "6B",
+  "in": {
+   "beat": 0.46002,
+   "downbeat": 1.583
+  },
+  "out": {
+   "beat": 0.4605,
+   "downbeat": 261.144
+  }
+ },
+ "String of Violin": {
+  "beat": 0.45238,
+  "start": 1.23,
+  "end": 335.99,
+  "duration": 337.2,
+  "key": "9A",
+  "in": {
+   "beat": 0.44968,
+   "downbeat": 1.495
+  },
+  "out": {
+   "beat": 0.45367,
+   "downbeat": 291.887
+  }
+ },
+ "Su I To Ken": {
+  "beat": 0.45173,
+  "start": 0.46,
+  "end": 295.81,
+  "duration": 296.6,
+  "key": "2A",
+  "in": {
+   "beat": 0.45374,
+   "downbeat": 2.203
+  },
+  "out": {
+   "beat": 0.45412,
+   "downbeat": 251.476
+  }
+ },
+ "Swing It Up": {
+  "beat": 0.45518,
+  "start": 0.2,
+  "end": 266.61,
+  "duration": 267.52,
+  "key": "4A",
+  "in": {
+   "beat": 0.45531,
+   "downbeat": 0.241
+  },
+  "out": {
+   "beat": 0.45655,
+   "downbeat": 221.674
+  }
+ },
+ "THUNDER BEATS — Echoes of Marugetta": {
+  "beat": 0.44602,
+  "start": 0.51,
+  "end": 273.19,
+  "duration": 273.2,
+  "key": "4A",
+  "in": {
+   "beat": 0.44517,
+   "downbeat": 1.889
+  },
+  "out": {
+   "beat": 0.44815,
+   "downbeat": 228.459
+  }
+ },
+ "THUNDER REIGN": {
+  "beat": 0.44193,
+  "start": 0.53,
+  "end": 251.12,
+  "duration": 251.96,
+  "key": "4A",
+  "in": {
+   "beat": 0.44003,
+   "downbeat": 2.029
+  },
+  "out": {
+   "beat": 0.44257,
+   "downbeat": 207.407
+  }
+ },
+ "TRI-TRI-TRICK OR TREAT": {
+  "beat": 0.45482,
+  "start": 0.44,
+  "end": 259.55,
+  "duration": 260.0,
+  "key": "4A",
+  "in": {
+   "beat": 0.45363,
+   "downbeat": 1.848
+  },
+  "out": {
+   "beat": 0.45414,
+   "downbeat": 214.797
+  }
+ },
+ "TSUGARU ~Shamisen Session PIANO HOUSE ~": {
+  "beat": 0.44133,
+  "start": 0.02,
+  "end": 196.02,
+  "duration": 197.36,
+  "key": "9A",
+  "in": {
+   "beat": 0.44191,
+   "downbeat": 1.451
+  },
+  "out": {
+   "beat": 0.44335,
+   "downbeat": 152.575
+  }
+ },
+ "Tequila": {
+  "beat": 0.4529,
+  "start": 0.79,
+  "end": 244.84,
+  "duration": 245.16,
+  "key": "6A",
+  "in": {
+   "beat": 0.45173,
+   "downbeat": 2.243
+  },
+  "out": {
+   "beat": 0.45506,
+   "downbeat": 201.564
+  }
+ },
+ "The Word I Won’t Say": {
+  "beat": 0.45613,
+  "start": 0.37,
+  "end": 342.92,
+  "duration": 346.68,
+  "key": "6B",
+  "in": {
+   "beat": 0.45589,
+   "downbeat": 1.029
+  },
+  "out": {
+   "beat": 0.45566,
+   "downbeat": 298.593
+  }
+ },
+ "Trumpet ARENA": {
+  "beat": 0.45573,
+  "start": 0.2,
+  "end": 276.4,
+  "duration": 277.2,
+  "key": "6A",
+  "in": {
+   "beat": 0.45502,
+   "downbeat": 1.321
+  },
+  "out": {
+   "beat": 0.45418,
+   "downbeat": 231.504
+  }
+ },
+ "Two Pianos, One Desire (Marugetta Piano House)": {
+  "beat": 0.44457,
+  "start": 0.43,
+  "end": 255.56,
+  "duration": 256.2,
+  "key": "3A",
+  "in": {
+   "beat": 0.44184,
+   "downbeat": 0.71
+  },
+  "out": {
+   "beat": 0.44686,
+   "downbeat": 210.575
+  }
+ },
+ "Wa Ensemble!!": {
+  "beat": 0.44941,
+  "start": 1.0,
+  "end": 314.21,
+  "duration": 314.92,
+  "key": "6A",
+  "in": {
+   "beat": 0.44868,
+   "downbeat": 1.723
+  },
+  "out": {
+   "beat": 0.45076,
+   "downbeat": 271.002
+  }
+ },
+ "Wake me up": {
+  "beat": 0.44439,
+  "start": 1.44,
+  "end": 366.38,
+  "duration": 366.68,
+  "key": "6A",
+  "in": {
+   "beat": 0.44515,
+   "downbeat": 1.619
+  },
+  "out": {
+   "beat": 0.44611,
+   "downbeat": 321.791
+  }
+ },
+ "Want You, Hate You": {
+  "beat": 0.46166,
+  "start": 0.0,
+  "end": 172.49,
+  "duration": 174.68,
+  "key": "3A",
+  "in": {
+   "beat": 0.46483,
+   "downbeat": 1.226
+  },
+  "out": {
+   "beat": 0.46184,
+   "downbeat": 129.189
+  }
+ },
+ "You Light Me Up": {
+  "beat": 0.46106,
+  "start": 0.1,
+  "end": 236.62,
+  "duration": 237.16,
+  "key": "1B",
+  "in": {
+   "beat": 0.4609,
+   "downbeat": 1.235
+  },
+  "out": {
+   "beat": 0.46307,
+   "downbeat": 192.004
+  }
+ },
+ "★M マルゲッタの誘惑 ~ J-POP Stylish & Catchy ~": {
+  "beat": 0.46152,
+  "start": 1.06,
+  "end": 228.77,
+  "duration": 232.84,
+  "key": "3B",
+  "in": {
+   "beat": 0.46119,
+   "downbeat": 1.874
+  },
+  "out": {
+   "beat": 0.46157,
+   "downbeat": 185.075
+  }
+ },
+ "あと少し": {
+  "beat": 0.46075,
+  "start": 0.15,
+  "end": 244.6,
+  "duration": 244.6,
+  "key": "2A",
+  "in": {
+   "beat": 0.45889,
+   "downbeat": 1.106
+  },
+  "out": {
+   "beat": 0.46096,
+   "downbeat": 200.289
+  }
+ },
+ "すれ違い": {
+  "beat": 0.45373,
+  "start": 0.85,
+  "end": 315.16,
+  "duration": 316.88,
+  "key": "6B",
+  "in": {
+   "beat": 0.45262,
+   "downbeat": 1.027
+  },
+  "out": {
+   "beat": 0.4552,
+   "downbeat": 270.301
+  }
+ },
+ "そのままの言葉で ／ In My Own Words": {
+  "beat": 0.45317,
+  "start": 0.2,
+  "end": 336.52,
+  "duration": 337.16,
+  "key": "3B",
+  "in": {
+   "beat": 0.45189,
+   "downbeat": 0.579
+  },
+  "out": {
+   "beat": 0.45152,
+   "downbeat": 291.658
+  }
+ },
+ "まだ好きやけん": {
+  "beat": 0.44883,
+  "start": 1.03,
+  "end": 270.91,
+  "duration": 271.8,
+  "key": "9B",
+  "in": {
+   "beat": 0.45126,
+   "downbeat": 1.853
+  },
+  "out": {
+   "beat": 0.45035,
+   "downbeat": 227.271
+  }
+ },
+ "マルゲッタのハロウィン": {
+  "beat": 0.45211,
+  "start": 0.1,
+  "end": 200.6,
+  "duration": 201.12,
+  "key": "6A",
+  "in": {
+   "beat": 0.45114,
+   "downbeat": 1.422
+  },
+  "out": {
+   "beat": 0.45531,
+   "downbeat": 156.048
+  }
+ },
+ "二人の未来　～Forever Starts Tonight～": {
+  "beat": 0.4608,
+  "start": 0.53,
+  "end": 357.6,
+  "duration": 359.12,
+  "key": "2B",
+  "in": {
+   "beat": 0.45947,
+   "downbeat": 0.777
+  },
+  "out": {
+   "beat": 0.46123,
+   "downbeat": 312.954
+  }
+ },
+ "余恋　～Yo Re N～": {
+  "beat": 0.44969,
+  "start": 0.57,
+  "end": 325.81,
+  "duration": 326.6,
+  "key": "6A",
+  "in": {
+   "beat": 0.44986,
+   "downbeat": 2.126
+  },
+  "out": {
+   "beat": 0.44801,
+   "downbeat": 282.395
+  }
+ },
+ "和楽祭　~風の中へ~": {
+  "beat": 0.45968,
+  "start": 1.16,
+  "end": 377.38,
+  "duration": 377.92,
+  "key": "9A",
+  "in": {
+   "beat": 0.45819,
+   "downbeat": 2.267
+  },
+  "out": {
+   "beat": 0.46196,
+   "downbeat": 332.955
+  }
+ },
+ "夏の余白 ／ Summer Left Behind": {
+  "beat": 0.45504,
+  "start": 0.29,
+  "end": 383.62,
+  "duration": 384.4,
+  "key": "5B",
+  "in": {
+   "beat": 0.45349,
+   "downbeat": 1.791
+  },
+  "out": {
+   "beat": 0.45528,
+   "downbeat": 339.681
+  }
+ },
+ "恋じゃない": {
+  "beat": 0.45306,
+  "start": 1.52,
+  "end": 327.75,
+  "duration": 327.76,
+  "key": "6A",
+  "in": {
+   "beat": 0.45215,
+   "downbeat": 1.642
+  },
+  "out": {
+   "beat": 0.45558,
+   "downbeat": 284.325
+  }
+ },
+ "恋の解像度": {
+  "beat": 0.46156,
+  "start": 0.16,
+  "end": 325.68,
+  "duration": 326.8,
+  "key": "5B",
+  "in": {
+   "beat": 0.45936,
+   "downbeat": 0.176
+  },
+  "out": {
+   "beat": 0.46049,
+   "downbeat": 280.864
+  }
+ },
+ "恋煩い　~LOVESicK~": {
+  "beat": 0.44807,
+  "start": 0.46,
+  "end": 375.5,
+  "duration": 376.4,
+  "key": "4A",
+  "in": {
+   "beat": 0.44979,
+   "downbeat": 1.372
+  },
+  "out": {
+   "beat": 0.44691,
+   "downbeat": 330.709
+  }
+ },
+ "月影 ~Shamisen HOUSE~": {
+  "beat": 0.4492,
+  "start": 0.96,
+  "end": 350.41,
+  "duration": 350.6,
+  "key": "8A",
+  "in": {
+   "beat": 0.45228,
+   "downbeat": 1.36
+  },
+  "out": {
+   "beat": 0.45007,
+   "downbeat": 305.93
+  }
+ },
+ "鳴らせ夏の夜": {
+  "beat": 0.44748,
+  "start": 0.82,
+  "end": 362.07,
+  "duration": 362.12,
+  "key": "4A",
+  "in": {
+   "beat": 0.44742,
+   "downbeat": 1.916
+  },
+  "out": {
+   "beat": 0.44668,
+   "downbeat": 318.45
+  }
+ }
+}

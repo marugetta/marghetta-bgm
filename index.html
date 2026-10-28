@@ -25,8 +25,8 @@
     font-weight:800;font-size:17px;background:linear-gradient(135deg,var(--coral),var(--pink-d))}
   .brand b{display:block;font-size:14px;letter-spacing:.04em;color:var(--pink-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .brand small{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .chips{display:flex;gap:6px;flex:none}
-  .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 11px;
+  .chips{display:flex;gap:4px;flex:none}
+  .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 9px;
     font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
   .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
@@ -50,6 +50,10 @@
   .qchip{display:none;align-items:center;gap:4px;background:rgba(255,255,255,.22);border:none;color:#fff;
     border-radius:999px;padding:3px 9px;font-size:11px;cursor:pointer}
   .qchip.show{display:inline-flex}
+  .djb{display:none;background:rgba(0,0,0,.25);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;animation:djpulse 1s ease-in-out infinite alternate}
+  .djb.show{display:inline-block}
+  @keyframes djpulse{from{opacity:.65}to{opacity:1}}
   .bpm{display:none;background:rgba(255,255,255,.22);border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;
     letter-spacing:.04em;font-variant-numeric:tabular-nums}
   .bpm.show{display:inline-block}
@@ -189,6 +193,7 @@
     <div style="min-width:0"><b>MARGHETTA BGM</b><small>めんたいこ生パスタ マルゲッタ</small></div>
   </div>
   <div class="chips">
+    <button class="chip" id="djBtn" title="曲をDJのようにつなぐ">🎧 DJ</button>
     <button class="chip" id="autoBtn" title="時間帯でプレイリストを自動切替">⏰ 自動</button>
     <button class="chip" id="wakeBtn" title="再生中は画面を消さない">☀ 画面ON</button>
   </div>
@@ -200,7 +205,7 @@
     <div class="meta">
       <div class="eyebrow">NOW PLAYING<button class="star" id="nowStar" aria-label="お気に入り"></button></div>
       <div class="title" id="title">曲を読み込み中…</div>
-      <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="lyr" id="nowLyr">歌詞</button><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button></div>
+      <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="lyr" id="nowLyr">歌詞</button><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button><span class="djb" id="djBadge"></span><button class="qchip" id="djTry" title="今の曲を、次の曲へつなぐ少し前まで進める">⏭ つなぎ目を試す</button></div>
     </div>
   </div>
   <div class="seek">
@@ -248,11 +253,13 @@
 <div class="toast" id="toast"></div>
 
 <audio id="audio" preload="auto" playsinline></audio>
+<audio id="audio2" preload="auto" playsinline></audio>
 
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  const audio = $('audio');
+  const decks = [$('audio'), $('audio2')]; // DJミックスで2台を交互に使う
+  let audio = decks[0];                     // いま流れている（主役の）方
   const ICON_PLAY = '<path d="M8 5v14l11-7z"/>';
   const ICON_PAUSE = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
   const store = {
@@ -342,9 +349,16 @@
   const updateSub = () => { $('sub').textContent = `${data.playlists[plIndex].label}　${pos+1} / ${order.length}`; };
 
   function load(play){
+    djAbort();
     const s = current();
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
+    showCurrent();
+    if (play) audio.play().catch(() => {});
+  }
+  // 画面の表示だけを、いまの曲に合わせる（DJミックスでは曲の読み込みをせずに切り替えるため）
+  function showCurrent(){
+    const s = current();
     $('title').textContent = s.title;
     showBpm(); showFavs();
     $('nowLyr').classList.toggle('show', !!s.lyrics);
@@ -354,7 +368,6 @@
     if ('mediaSession' in navigator){
       navigator.mediaSession.metadata = new MediaMetadata({ title: s.title, artist: 'マルゲッタ', album: data.playlists[plIndex].label });
     }
-    if (play) audio.play().catch(() => {});
   }
 
   function next(auto_){
@@ -365,6 +378,7 @@
     load(true);
   }
   function prev(){
+    djAbort();
     if (audio.currentTime > 3){ audio.currentTime = 0; return; }
     pos = (pos - 1 + order.length) % order.length; load(true);
   }
@@ -501,6 +515,8 @@
 
   function syncChips(){
     $('autoBtn').classList.toggle('on', auto);
+    $('djBtn').classList.toggle('on', djOn);
+    $('djTry').classList.toggle('show', djOn);
     $('wakeBtn').classList.toggle('on', wakeWanted);
     $('shuffleBtn').classList.toggle('on', shuffle);
     $('repeatBtn').classList.toggle('on', repeat);
@@ -618,8 +634,8 @@
   }
   // 音程を保ったまま再生速度を変える（曲が変わっても defaultPlaybackRate で引き継ぐ）
   function applyRate(){
-    audio.preservesPitch = audio.mozPreservesPitch = audio.webkitPreservesPitch = true;
-    audio.defaultPlaybackRate = audio.playbackRate = rate / 100;
+    for (const d of decks){ d.preservesPitch = d.mozPreservesPitch = d.webkitPreservesPitch = true; d.defaultPlaybackRate = rate / 100; }
+    audio.playbackRate = rate / 100;
     $('rate').value = rate; fill($('rate'));
     $('rateBtn').textContent = rate + '%'; $('rateBtn').classList.toggle('changed', rate !== 100);
     showBpm();
@@ -628,16 +644,160 @@
   $('rate').oninput = e => setRate(+e.target.value);
   $('rateBtn').onclick = () => { if (rate !== 100){ setRate(100); toast('テンポを100%に戻しました'); } };
 
-  const fill = el => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
-  $('vol').oninput = e => { audio.volume = e.target.value/100; store.set('vol', +e.target.value); fill(e.target); };
-  $('seek').oninput = e => { if (audio.duration) audio.currentTime = e.target.value/1000*audio.duration; fill(e.target); };
+  // --- DJミックス：曲の終わりと次の曲の頭を、テンポと拍をそろえて重ねる ---
+  // 曲ごとの拍の位置・実質の終わりは mix.json（scripts/analyze-mix.py で測定）から読む
+  const MIX_BARS = 8;               // 重ねる長さ（小節）
+  let djOn = store.get('dj', false);
+  let ctx = null, chain = null;     // Web Audio（DJミックスを使うときだけ作る）
+  let dj = null;                    // 次の曲の準備中・ミックス中の状態
+  const other = () => decks.find(d => d !== audio);
+  const barLen = g => g.beat * 4;   // g は拍の格子（mix.in = イントロ、mix.out = アウトロ）
 
-  audio.addEventListener('play', () => { $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
-  audio.addEventListener('pause', () => { $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
-  audio.addEventListener('ended', () => next(true));
-  audio.addEventListener('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
-  audio.addEventListener('error', () => { if (!audio.src) return; toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
-  audio.addEventListener('timeupdate', () => {
+  function initGraph(){
+    if (ctx){ ctx.resume?.(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    chain = new Map(decks.map(d => {
+      const src = ctx.createMediaElementSource(d);
+      const low = ctx.createBiquadFilter(); low.type = 'lowshelf'; low.frequency.value = 200; low.gain.value = 0;
+      const gain = ctx.createGain();
+      src.connect(low); low.connect(gain); gain.connect(ctx.destination);
+      return [d, { low, gain }];
+    }));
+  }
+  // iPhone は、一度ボタン操作の中で再生した audio でないと後から再生できないため、ON にしたときに両方を一度鳴らしておく
+  function unlockDecks(){
+    const d = other();
+    if (!d.paused || dj || !audio.src) return;
+    d.src = audio.src; d.muted = true;
+    d.play().then(() => { d.pause(); d.muted = false; }).catch(() => { d.muted = false; });
+  }
+  const setLevel = (d, gain, lowDb) => {
+    if (!chain) return;
+    const c = chain.get(d), t = ctx.currentTime;
+    c.gain.gain.setTargetAtTime(gain, t, 0.03);
+    c.low.gain.setTargetAtTime(lowDb, t, 0.05);
+  };
+
+  // 次に流れる曲（再生順の最後なら、ループで作り直す新しい再生順の先頭）
+  function peekNext(){
+    if (pendingSwitch != null) return null;
+    if (pos < order.length - 1) return { order, pos: pos + 1 };
+    if (!repeat) return null;
+    const keep = [order, pos]; makeOrder(); const next = { order, pos: 0 }; [order, pos] = keep;
+    return next;
+  }
+  // 出ていく曲の、重ね始める小節の頭（曲の中の秒）。途中から飛ばして過ぎていたら次の小節から
+  function mixOutAt(m, now){
+    const g = m.out, bar = barLen(g);
+    let t = g.downbeat + bar * Math.floor((m.end - MIX_BARS * bar - g.downbeat) / bar);
+    if (now > t - 0.3) t = g.downbeat + bar * Math.ceil((now + 0.5 - g.downbeat) / bar);
+    return t + MIX_BARS * bar <= m.duration + 1 ? t : null;
+  }
+  // 入ってくる曲の、音が鳴り始めてから最初の小節の頭
+  const mixInAt = m => Math.max(0, m.in.downbeat - barLen(m.in) * Math.floor((m.in.downbeat - m.start + 0.05) / barLen(m.in)));
+
+  function djTick(){
+    if (!djOn || !ctx || audio.paused) return;
+    // ミックスが終わったあとは、テンポをゆっくり元の設定に戻す
+    if (!dj){
+      const base = rate / 100, r = audio.playbackRate;
+      if (Math.abs(r - base) > 0.001) audio.playbackRate = r + Math.sign(base - r) * Math.min(0.0015, Math.abs(base - r));
+    }
+    const s = current(), m = s?.mix;
+    if (!dj){
+      if (!m?.out || !audio.duration) return;
+      const at = mixOutAt(m, audio.currentTime);
+      if (at == null || audio.currentTime < at - 20) return; // 20秒前から次の曲を用意
+      const nx = peekNext(), ns = nx && songs()[nx.order[nx.pos]];
+      if (!ns?.mix?.in || ns === s) return;
+      const inc = other(), inAt = mixInAt(ns.mix);
+      let rateIn = audio.playbackRate * ns.mix.in.beat / m.out.beat;  // 入ってくる曲の速さを今の曲に合わせる
+      const matched = rateIn > 0.88 && rateIn < 1.12;          // 差が大きすぎるときは合わせずに重ねるだけ
+      if (!matched) rateIn = rate / 100;
+      inc.preservesPitch = inc.mozPreservesPitch = inc.webkitPreservesPitch = true;
+      inc.src = urlOf(ns.file);
+      inc.addEventListener('loadedmetadata', () => { inc.currentTime = inAt; inc.playbackRate = rateIn; }, { once: true });
+      setLevel(inc, 0, -30);
+      dj = { s, ns, nx, at, inAt, rateIn, matched, inc, started: false, swapped: false };
+      return;
+    }
+    if (dj.s !== s){ djAbort(); return; }
+    if (!dj.started){
+      if (audio.currentTime < dj.at - 0.02) return;
+      dj.started = true;
+      dj.inc.currentTime = dj.inAt; dj.inc.playbackRate = dj.rateIn;
+      dj.inc.play().catch(() => djAbort());
+      $('djBadge').textContent = `🎧 MIX → ${dj.ns.title}`; $('djBadge').classList.add('show');
+      return;
+    }
+    const mo = dj.s.mix.out, mi = dj.ns.mix.in;
+    const bars = (audio.currentTime - dj.at) / barLen(mo), p = Math.min(1, bars / MIX_BARS);
+    // 拍のずれを、入ってくる曲の速さを少しだけ変えて追いかける（大きくずれたら位置を直す）
+    if (dj.matched && !dj.inc.paused){
+      const want = dj.inAt + bars * barLen(mi), err = want - dj.inc.currentTime;
+      // 最初の1小節（まだほとんど聞こえない間）は細かく位置を合わせ直す。その後は大きくずれたときだけ
+      if (Math.abs(err) > (bars < 1 ? 0.025 : 0.12)){ dj.inc.currentTime = want; dj.err = 0; }
+      else {
+        dj.err = (dj.err || 0) * 0.85 + err * 0.15;  // 読み取りのぶれをならしてから、ゆるやかに補正（音の揺れを防ぐ）
+        dj.inc.playbackRate = dj.rateIn * (1 + Math.max(-0.015, Math.min(0.015, dj.err * 0.5)));
+      }
+    }
+    // 前半で次の曲を上げ、後半で今の曲を下げる。真ん中の小節で低音を入れ替える
+    const half = bars >= MIX_BARS / 2;
+    setLevel(dj.inc, Math.sin(Math.min(1, p * 2) * Math.PI / 2), half ? 0 : -30);
+    setLevel(audio, Math.cos(Math.max(0, p * 2 - 1) * Math.PI / 2), half ? -30 : 0);
+    if (p >= 1) djFinish();
+  }
+  function djFinish(){
+    const d = dj; dj = null;
+    const out = audio; audio = d.inc;
+    order = d.nx.order; pos = d.nx.pos;
+    out.pause(); setLevel(out, 1, 0); setLevel(audio, 1, 0);
+    $('djBadge').classList.remove('show');
+    showCurrent();
+    $('now').classList.toggle('playing', !audio.paused);
+  }
+  // 試聴用：今の曲を、次の曲へつなぎ始める10秒前まで進める
+  $('djTry').onclick = () => {
+    const m = current()?.mix;
+    if (!m?.out){ toast('この曲はDJミックスの情報がありません'); return; }
+    djAbort();
+    const g = m.out, bar = barLen(g);
+    const at = g.downbeat + bar * Math.floor((m.end - MIX_BARS * bar - g.downbeat) / bar);
+    audio.currentTime = Math.max(0, at - 10);
+    if (audio.paused) audio.play().catch(() => {});
+  };
+  function djAbort(){
+    if (!dj) return;
+    const inc = dj.inc; dj = null;
+    inc.pause(); inc.removeAttribute('src'); inc.load();
+    setLevel(inc, 1, 0); setLevel(audio, 1, 0);
+    $('djBadge').classList.remove('show');
+  }
+  setInterval(djTick, 50);
+  window.__dj = () => dj && { at: dj.at, inAt: dj.inAt, rateIn: dj.rateIn, matched: dj.matched, started: dj.started, next: dj.ns.title }; // 動作確認用
+  $('djBtn').onclick = () => {
+    djOn = !djOn; store.set('dj', djOn); syncChips();
+    if (djOn){ initGraph(); unlockDecks(); toast('DJミックス ON：曲の終わりを次の曲と重ねてつなぎます'); }
+    else { djAbort(); toast('DJミックス OFF'); }
+  };
+  // 前回 ON のまま開いたときは、最初の画面タッチで準備する（音の処理はタッチの中でしか始められないため）
+  document.addEventListener('pointerdown', () => { if (djOn){ initGraph(); unlockDecks(); } }, { once: true, capture: true });
+
+  const fill = el => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
+  $('vol').oninput = e => { for (const d of decks) d.volume = e.target.value/100; store.set('vol', +e.target.value); fill(e.target); };
+  $('seek').oninput = e => { djAbort(); if (audio.duration) audio.currentTime = e.target.value/1000*audio.duration; fill(e.target); };
+
+  // 2台の audio のうち、いま主役の方のイベントだけを扱う
+  const onDeck = (ev, fn) => decks.forEach(d => d.addEventListener(ev, () => { if (d === audio) fn(); }));
+  onDeck('play', () => { $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
+  onDeck('pause', () => { if (dj?.started) djAbort(); $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
+  onDeck('ended', () => dj?.started ? djFinish() : next(true));
+  onDeck('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
+  onDeck('error', () => { if (!audio.src) return; djAbort(); toast('読み込めない曲をスキップしました'); setTimeout(() => next(true), 800); });
+  onDeck('timeupdate', () => {
     $('cur').textContent = fmt(audio.currentTime); $('dur').textContent = fmt(audio.duration);
     if (audio.duration){ $('seek').value = audio.currentTime/audio.duration*1000; fill($('seek')); }
   });
@@ -650,7 +810,7 @@
   }
 
   // --- 起動 ---
-  const v = store.get('vol', 70); $('vol').value = v; audio.volume = v/100; fill($('vol'));
+  const v = store.get('vol', 70); $('vol').value = v; for (const d of decks) d.volume = v/100; fill($('vol'));
   applyRate(); showFavs();
   syncChips();
   fetch('songs.json?t=' + Date.now(), { cache: 'no-store' })
