@@ -31,6 +31,7 @@ jobs:
         run: |
           mkdir -p _site music
           cp -r index.html songs.json music _site/
+          if [ -d lyrics ]; then cp -r lyrics _site/; fi
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

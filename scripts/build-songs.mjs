@@ -45,6 +45,18 @@ for (const [tag, titles] of Object.entries(tagMap)) {
     if (!s.tags.includes(tag)) s.tags.push(tag);
   }
 }
+
+// lyrics/曲名.txt があれば、その曲に歌詞を付ける（プレーヤーが必要なときに読み込む）
+const LYRICS = join(ROOT, 'lyrics');
+if (existsSync(LYRICS)) {
+  for (const name of readdirSync(LYRICS)) {
+    if (extname(name).toLowerCase() !== '.txt') continue;
+    const s = byName.get(toTitle(basename(name, extname(name))));
+    if (!s) { console.warn(`lyrics: 「${name}」に合う曲が見つかりません`); continue; }
+    s.lyrics = 'lyrics/' + name.normalize('NFC');
+  }
+}
+
 const groups = new Map();
 for (const s of all) {
   const parts = s.file.split('/');
