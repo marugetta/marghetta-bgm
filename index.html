@@ -136,6 +136,22 @@
   li.cur .t{color:var(--pink-d);font-weight:700}
   li.cur .n{color:var(--pink);font-weight:700}
   li.out{opacity:.6}
+  .star{flex:none;border:none;background:none;width:36px;height:36px;margin:-6px -4px -6px 0;border-radius:50%;
+    display:grid;place-items:center;cursor:pointer;color:#D9C6C1}
+  .star svg{width:22px;height:22px;fill:currentColor}
+  .star.on{color:#F2B33D}
+  .star:active{transform:scale(.85)}
+  .eyebrow{display:flex;align-items:center;justify-content:space-between}
+  .now .star{color:rgba(255,255,255,.55);width:40px;height:40px;margin:-10px -8px -10px 0}
+  .now .star svg{width:26px;height:26px}
+  .now .star.on{color:#FFD45C}
+  .tag.fav{color:#B7801A}
+  .tag.fav.on{background:#F2B33D;border-color:#F2B33D;color:#fff}
+  .backup{margin:0 16px 40px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+    display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+  .backup span{flex:1}
+  .backup button{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;
+    padding:7px 12px;font-size:12px;cursor:pointer;white-space:nowrap}
   .empty{text-align:center;color:var(--muted);font-size:13px;padding:32px 16px}
   .msg{margin:24px 20px;padding:16px;border-radius:14px;background:var(--card);border:1px dashed var(--line);
     font-size:13px;line-height:1.7;color:var(--muted)}
@@ -162,7 +178,7 @@
   <div class="np">
     <div class="disc"></div>
     <div class="meta">
-      <div class="eyebrow">NOW PLAYING</div>
+      <div class="eyebrow">NOW PLAYING<button class="star" id="nowStar" aria-label="お気に入り"></button></div>
       <div class="title" id="title">曲を読み込み中…</div>
       <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button></div>
     </div>
@@ -203,6 +219,8 @@
   </div>
 </section>
 <ol id="list"></ol>
+<div class="backup" id="backup"><span id="favCount"></span>
+  <button id="exportBtn">バックアップ</button><button id="importBtn">復元</button></div>
 <div class="toast" id="toast"></div>
 
 <audio id="audio" preload="auto" playsinline></audio>
@@ -238,6 +256,9 @@
   let repeat = store.get('repeat', true);
   let auto = store.get('auto', true);
   let wakeWanted = store.get('wake', true);
+  let favs = new Set(store.get('favs', [])); // お気に入り（曲名）。この端末だけに保存
+  let favFilter = false;
+  const STAR = '<svg viewBox="0 0 24 24"><path d="M12 17.3 18.2 21l-1.6-7 5.4-4.7-7.2-.6L12 2 9.2 8.7 2 9.3l5.4 4.7-1.6 7z"/></svg>';
   let rate = store.get('rate', 100); // テンポ（%）。音程は変えずに速さだけ変える
   let wakeLock = null;
   let pendingSwitch = null; // 自動切替：曲の終わりで切り替える
@@ -260,9 +281,10 @@
   function filterLabel(){
     const q = $('q').value.trim();
     const tp = TEMPOS.find(t => t.id === tempoFilter);
-    return [tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
+    return [favFilter && '★お気に入り', tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
   }
   function matches(s){
+    if (favFilter && !favs.has(s.title)) return false;
     if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
     if (tempoFilter && tempoOf(s) !== tempoFilter) return false;
     const q = norm($('q').value.trim());
@@ -300,7 +322,7 @@
     if (!s){ $('title').textContent = '曲がありません'; return; }
     audio.src = urlOf(s.file);
     $('title').textContent = s.title;
-    showBpm();
+    showBpm(); showFavs();
     updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
@@ -358,7 +380,15 @@
     for (const s of songs()) for (const t of s.tags || []) counts[t] = (counts[t] || 0) + 1;
     const names = [...(data.tags || []), ...Object.keys(counts)].filter((t, i, a) => counts[t] && a.indexOf(t) === i);
     if (tagFilter && !counts[tagFilter]) tagFilter = '';
-    el.style.display = names.length ? '' : 'none';
+    const nFav = songs().filter(s => favs.has(s.title)).length;
+    const f = document.createElement('button');
+    f.className = 'tag fav' + (favFilter ? ' on' : '');
+    f.innerHTML = `★ お気に入り<small>${nFav}</small>`;
+    f.onclick = () => {
+      if (!nFav && !favFilter){ toast('曲の ☆ を押すと、お気に入りに追加できます'); return; }
+      favFilter = !favFilter; renderTags(); renderList();
+    };
+    el.appendChild(f);
     names.forEach(t => {
       const b = document.createElement('button');
       b.className = 'tag' + (t === tagFilter ? ' on' : '');
@@ -401,8 +431,9 @@
       const s = songs()[i];
       const li = document.createElement('li');
       li.className = (i === cur ? 'cur' : '') + (queueLabel && !queue.includes(i) ? ' out' : '');
-      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>${s.bpm ? `<span class="bp">${bpmOf(s)}<small>BPM</small></span>` : ''}`;
+      li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div><button class="star${favs.has(s.title) ? ' on' : ''}" aria-label="お気に入り">${STAR}</button>${s.bpm ? `<span class="bp">${bpmOf(s)}<small>BPM</small></span>` : ''}`;
       li.querySelector('.t').textContent = s.title;
+      li.querySelector('.star').onclick = e => { e.stopPropagation(); toggleFav(s); };
       for (const t of s.tags || []){ const sp = document.createElement('span'); sp.textContent = '#' + t; li.querySelector('.tg').appendChild(sp); }
       // タップした曲から、いま表示している曲の範囲で再生
       li.onclick = () => {
@@ -467,6 +498,47 @@
   $('playShfBtn').onclick = () => playVisible('shf');
   $('qchip').onclick = () => { setQueue([...songs().keys()]); makeOrder(order[pos]); updateSub(); renderList();
     toast('全曲の再生に戻しました'); };
+  // --- お気に入り（この端末のブラウザにだけ保存） ---
+  const FAV_HEAD = 'マルゲッタBGM お気に入り:';
+  function saveFavs(){
+    store.set('favs', [...favs]);
+    // 端末の空き容量が少ないときなどに、ブラウザが勝手に消さないようお願いする
+    if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
+  }
+  function showFavs(){
+    const s = current();
+    $('nowStar').innerHTML = STAR;
+    $('nowStar').classList.toggle('on', !!s && favs.has(s.title));
+    $('favCount').textContent = `★ お気に入り ${favs.size}曲`;
+  }
+  function toggleFav(s){
+    if (!s) return;
+    const on = !favs.has(s.title);
+    on ? favs.add(s.title) : favs.delete(s.title);
+    saveFavs(); showFavs(); renderTags(); renderList();
+    toast(on ? '★ お気に入りに追加しました' : 'お気に入りから外しました');
+  }
+  $('nowStar').onclick = () => toggleFav(current());
+  $('exportBtn').onclick = async () => {
+    if (!favs.size){ toast('お気に入りがまだありません'); return; }
+    const text = FAV_HEAD + JSON.stringify([...favs]);
+    try { await navigator.clipboard.writeText(text); toast('コピーしました。メモやLINEに貼って保存してください'); }
+    catch { prompt('この文字をすべてコピーして、メモやLINEに保存してください', text); }
+  };
+  $('importBtn').onclick = () => {
+    const text = prompt('バックアップした文字を貼り付けてください');
+    if (!text) return;
+    try {
+      const list = JSON.parse(text.slice(text.indexOf('[')));
+      if (!Array.isArray(list)) throw 0;
+      const all = new Set(data.playlists.flatMap(p => p.songs.map(s => s.title)));
+      let n = 0;
+      for (const t of list) if (typeof t === 'string' && !favs.has(t)){ favs.add(t); if (all.has(t)) n++; }
+      saveFavs(); showFavs(); renderTags(); renderList();
+      toast(`お気に入りを復元しました（${n}曲を追加）`);
+    } catch { alert('読み取れませんでした。バックアップした文字を、最初から最後まで貼り付けてください。'); }
+  };
+
   function showBpm(){
     const s = current();
     $('bpm').textContent = s?.bpm ? `♩ ${bpmOf(s)} BPM${rate !== 100 ? `（${rate}%）` : ''}` : '';
@@ -507,7 +579,7 @@
 
   // --- 起動 ---
   const v = store.get('vol', 70); $('vol').value = v; audio.volume = v/100; fill($('vol'));
-  applyRate();
+  applyRate(); showFavs();
   syncChips();
   fetch('songs.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => { if (!r.ok) throw 0; return r.json(); })
@@ -521,7 +593,7 @@
     })
     .catch(e => {
       $('title').textContent = '曲がまだありません';
-      $('finder').style.display = 'none';
+      $('finder').style.display = $('backup').style.display = 'none';
       $('list').outerHTML = `<div class="msg">GitHub の <b>music</b> フォルダに MP3 をアップロードすると、数分後にここに曲が表示されます。<br>
         フォルダ分け（例：music/lunch、music/dinner）するとプレイリストになります。</div>`;
     });
