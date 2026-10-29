@@ -191,6 +191,22 @@
   },
   "silence": 294.21
  },
+ "DRIP DRIP DROP! Ver2": {
+  "beat": 0.44243,
+  "start": 0.0,
+  "end": 253.63,
+  "silence": 255.2,
+  "duration": 255.2,
+  "key": "3A",
+  "in": {
+   "beat": 0.43917,
+   "downbeat": 0.596
+  },
+  "out": {
+   "beat": 0.4404,
+   "downbeat": 209.384
+  }
+ },
  "Don't Say Goodnight": {
   "beat": 0.4498,
   "start": 0.44,
