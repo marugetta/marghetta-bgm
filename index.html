@@ -110,6 +110,15 @@
   .tag small{color:var(--muted);margin-left:2px}
   .tag.on{background:var(--pink);border-color:var(--pink);color:#fff}
   .tag.on small{color:rgba(255,255,255,.8)}
+  .excl{margin-top:8px}
+  .xbtn{flex:none;border:1px dashed var(--muted);background:none;border-radius:999px;padding:6px 12px;
+    font-size:13px;cursor:pointer;color:var(--muted)}
+  .xbtn.open{border-style:solid;color:var(--ink)}
+  .xtag{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;
+    font-size:13px;cursor:pointer;color:var(--muted)}
+  .xtag small{margin-left:2px}
+  .xtag.on{background:var(--ink);border-color:var(--ink);color:#fff;text-decoration:line-through}
+  .count small{font-size:12px;margin-left:4px}
   .tempos{margin-top:8px}
   .tempo{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;
     font-size:13px;cursor:pointer;color:var(--ink)}
@@ -237,6 +246,7 @@
     <button class="clear" id="clearBtn" aria-label="検索をクリア">×</button>
   </div>
   <div class="row tags" id="tags"></div>
+  <div class="row excl" id="excl"></div>
   <div class="row tempos" id="tempos"></div>
   <div class="actions">
     <div class="count" id="count"></div>
@@ -290,6 +300,8 @@
   let wakeWanted = store.get('wake', true);
   let favs = new Set(store.get('favs', [])); // お気に入り（曲名）。この端末だけに保存
   let favFilter = false;
+  let excluded = new Set(store.get('exclude', [])); // 除外タグ。この端末に記憶（季節外れの曲を外すなど）
+  let exclOpen = false;     // 除外タグを選ぶ欄を開いているか
   const STAR = '<svg viewBox="0 0 24 24"><path d="M12 17.3 18.2 21l-1.6-7 5.4-4.7-7.2-.6L12 2 9.2 8.7 2 9.3l5.4 4.7-1.6 7z"/></svg>';
   let rate = store.get('rate', 100); // テンポ（%）。音程は変えずに速さだけ変える
   let wakeLock = null;
@@ -309,6 +321,9 @@
   const current = () => songs()[order[pos]];
   const urlOf = f => f.split('/').map(encodeURIComponent).join('/');
   const norm = s => s.normalize('NFKC').toLowerCase();
+  const isExcluded = s => (s.tags || []).some(t => excluded.has(t));
+  // 再生の対象にする曲（除外タグの曲を除く）。全部除外されてしまうときは全曲
+  const base = () => { const all = [...songs().keys()], b = all.filter(i => !isExcluded(songs()[i])); return b.length ? b : all; };
 
   // --- 検索・タグの絞り込み ---
   function filterLabel(){
@@ -317,6 +332,7 @@
     return [favFilter && '★お気に入り', tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
   }
   function matches(s){
+    if (isExcluded(s) && base().length < songs().length) return false;
     if (favFilter && !favs.has(s.title)) return false;
     if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
     if (tempoFilter && tempoOf(s) !== tempoFilter) return false;
@@ -405,7 +421,7 @@
   }
 
   function selectPlaylist(i, play, fromAuto){
-    plIndex = i; setQueue([...songs().keys()]); makeOrder(); store.set('pl', data.playlists[i].id);
+    plIndex = i; setQueue(base()); makeOrder(); store.set('pl', data.playlists[i].id);
     renderTabs(); renderTags(); load(play);
     if (fromAuto) toast(`時間帯に合わせて「${data.playlists[i].label}」に切り替えました`);
   }
@@ -437,10 +453,10 @@
   function renderTags(){
     const el = $('tags'); el.innerHTML = '';
     const counts = {};
-    for (const s of songs()) for (const t of s.tags || []) counts[t] = (counts[t] || 0) + 1;
+    for (const i of base()) for (const t of songs()[i].tags || []) counts[t] = (counts[t] || 0) + 1;
     const names = [...(data.tags || []), ...Object.keys(counts)].filter((t, i, a) => counts[t] && a.indexOf(t) === i);
     if (tagFilter && !counts[tagFilter]) tagFilter = '';
-    const nFav = songs().filter(s => favs.has(s.title)).length;
+    const nFav = base().filter(i => favs.has(songs()[i].title)).length;
     const f = document.createElement('button');
     f.className = 'tag fav' + (favFilter ? ' on' : '');
     f.innerHTML = `★ お気に入り<small>${nFav}</small>`;
@@ -457,7 +473,46 @@
       b.onclick = () => { tagFilter = tagFilter === t ? '' : t; renderTags(); renderList(); };
       el.appendChild(b);
     });
-    renderTempos();
+    renderExcl(); renderTempos();
+  }
+
+  // 除外タグ：選んだタグの曲を、一覧からも再生からも外す。閉じているときは選んだタグだけを出す
+  function renderExcl(){
+    const el = $('excl'); el.innerHTML = '';
+    const counts = {};
+    for (const s of songs()) for (const t of s.tags || []) counts[t] = (counts[t] || 0) + 1;
+    const names = [...(data.tags || []), ...Object.keys(counts)].filter((t, i, a) => counts[t] && a.indexOf(t) === i);
+    el.style.display = names.length ? '' : 'none';
+    const on = names.filter(t => excluded.has(t));
+    const x = document.createElement('button');
+    x.className = 'xbtn' + (exclOpen ? ' open' : '');
+    x.textContent = exclOpen ? '除外タグ ▲ 閉じる' : on.length ? '除外タグ ▼' : '🚫 除外タグを選ぶ';
+    x.onclick = () => { exclOpen = !exclOpen; renderExcl(); };
+    el.appendChild(x);
+    (exclOpen ? names : on).forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'xtag' + (excluded.has(t) ? ' on' : '');
+      b.innerHTML = `#<span></span><small>${counts[t]}</small>`;
+      b.querySelector('span').textContent = t;
+      b.onclick = () => toggleExcl(t);
+      el.appendChild(b);
+    });
+  }
+  function toggleExcl(t){
+    excluded.has(t) ? excluded.delete(t) : excluded.add(t);
+    store.set('exclude', [...excluded]);
+    // 再生中の曲はそのまま最後まで流し、次の曲から除外を反映する
+    const cur = order[pos];
+    if (queueLabel) queue = queue.filter(i => !isExcluded(songs()[i]));
+    if (!queueLabel || !queue.length) setQueue(base());
+    makeOrder(queue.includes(cur) ? cur : null);
+    if (cur != null && !queue.includes(cur)){
+      if (shuffle) order.unshift(cur), pos = 0;
+      else { const k = order.findIndex(i => i > cur); pos = k < 0 ? order.length : k; order.splice(pos, 0, cur); }
+    }
+    if (audio.src) { updateSub(); prefetchNext(); }
+    toast(excluded.has(t) ? `#${t} の曲を除外しました` : `#${t} の除外をやめました`);
+    renderTags(); renderList();
   }
 
   function renderTempos(){
@@ -480,11 +535,12 @@
 
   function renderList(){
     const list = visible();
-    const filtered = list.length !== songs().length;
+    const filtered = list.length !== base().length;
+    const nEx = songs().length - base().length;
     const cur = order[pos];
     const ol = $('list'); ol.innerHTML = '';
     $('clearBtn').classList.toggle('show', !!$('q').value);
-    $('count').innerHTML = filtered ? `<b>${list.length}</b> 曲` : `全 <b>${list.length}</b> 曲`;
+    $('count').innerHTML = (filtered ? `<b>${list.length}</b> 曲` : `全 <b>${list.length}</b> 曲`) + (nEx ? `<small>（${nEx}曲除外）</small>` : '');
     $('playSeqBtn').disabled = $('playShfBtn').disabled = !list.length;
     if (!list.length){ ol.innerHTML = '<div class="empty">該当する曲がありません</div>'; return; }
     list.forEach((i, k) => {
@@ -499,7 +555,7 @@
       // タップした曲から、いま表示している曲の範囲で再生
       li.onclick = () => {
         if (filtered){ manualTakeover(); setQueue(list, filterLabel()); }
-        else setQueue([...songs().keys()]);
+        else setQueue(base());
         makeOrder(i); load(true);
       };
       ol.appendChild(li);
@@ -560,7 +616,7 @@
   $('clearBtn').onclick = () => { $('q').value = ''; renderList(); };
   $('playSeqBtn').onclick = () => playVisible('seq');
   $('playShfBtn').onclick = () => playVisible('shf');
-  $('qchip').onclick = () => { setQueue([...songs().keys()]); makeOrder(order[pos]); updateSub(); renderList();
+  $('qchip').onclick = () => { setQueue(base()); makeOrder(order[pos]); updateSub(); renderList();
     toast('全曲の再生に戻しました'); };
   // --- お気に入り（この端末のブラウザにだけ保存） ---
   const FAV_HEAD = 'マルゲッタBGM お気に入り:';
@@ -888,7 +944,7 @@
       if (!data.playlists?.length || !data.playlists.some(p => p.songs.length)) throw 'empty';
       let i = auto ? scheduledPlaylist() : -1;
       if (i < 0) i = Math.max(0, data.playlists.findIndex(p => p.id === store.get('pl', '')));
-      plIndex = i; setQueue([...songs().keys()]); makeOrder(); renderTabs(); renderTags(); load(false);
+      plIndex = i; setQueue(base()); makeOrder(); renderTabs(); renderTags(); load(false);
       setInterval(checkSchedule, 30000);
     })
     .catch(e => {
