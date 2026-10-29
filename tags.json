@@ -1,66 +1,294 @@
 {
-  "ハロウィン": [
+  "piano house": [
+    "After midnight",
+    "Another night ~Brust Jazz Session Ver. ~",
+    "Beer Fever 2",
+    "Between Yesterday and Today （リミックス）",
+    "Black light",
+    "Butterfly Effect",
+    "Carry me into the glow",
+    "COME MY WAY",
+    "Contraste",
+    "CRAZY FOR YOUR LOVE",
+    "Don't Say Goodnight",
+    "DRIP DRIP DROP!",
+    "ENDLESS SEN",
+    "Flip-flip",
+    "Glitter POP",
+    "Hello Goodbye",
+    "I Can't Let You Go",
+    "I Don't Wanna Lose You",
+    "It’s Maru Getta tonight",
+    "Ki-Ra-Ri ~ 和楽器ハウス 姫神 ~",
+    "Let the rhythm set me free ~JAZZ HOUSE Ver.~",
+    "Little by Little",
+    "Little Happiness",
+    "LOVE Echo",
+    "LOVE ON BEAT",
+    "Lucky, lucky, lucky tonight ~ J-POP Stylish & Catchy ~",
+    "Marugetta",
+    "Marugetta Got Me On Repeat",
+    "MOST PRESIOUS PIANOSAX",
+    "One more BITE!",
+    "One More Night",
+    "OUR STORY",
+    "PA-PA-PA! (Trumpet Addiction)",
+    "Pa-Pi-Pu Summer Lights",
+    "Paper crown",
+    "PIANO CHOPS !",
+    "PIANO REturn",
+    "Piano vs",
+    "PIANO　JAM",
+    "PRESENT",
+    "Rainy day on the tapping",
+    "Raspy PIANO （リミックス）",
+    "REMIND",
+    "SAKURA EMOTION",
+    "Same X'mas Same LOVE",
+    "SAX ARENA",
+    "SAX Refline",
+    "Set my heart on fire",
+    "Stay a little longer",
+    "Stay Close Tonight",
+    "Stay in My Heart",
+    "Stay With Me Tonight",
+    "String of Violin",
+    "Su I To Ken",
+    "Swing It Up",
+    "SWING TONIGHT",
+    "The Word I Won’t Say",
+    "THUNDER BEATS — Echoes of Marugetta",
+    "THUNDER REIGN",
+    "Trumpet ARENA",
+    "TSUGARU ~Shamisen Session PIANO HOUSE ~",
+    "Two Pianos, One Desire (Marugetta Piano House)",
+    "Wa Ensemble!!",
+    "Wake me up",
+    "Want You, Hate You",
+    "You Light Me Up",
+    "あと少し",
+    "すれ違い",
+    "そのままの言葉で ／ In My Own Words",
+    "まだ好きやけん",
     "マルゲッタのハロウィン",
+    "二人の未来　～Forever Starts Tonight～",
+    "余恋　～Yo Re N～",
+    "和楽祭　~風の中へ~",
+    "夏の余白 ／ Summer Left Behind",
+    "恋じゃない",
+    "恋の解像度",
+    "恋煩い　~LOVESicK~",
+    "月影 ~Shamisen HOUSE~",
+    "鳴らせ夏の夜"
+  ],
+  "Y2K": [
+    "COME MY WAY",
+    "CRAZY FOR YOUR LOVE",
+    "Flip-flip",
+    "Hello Goodbye",
+    "Little Happiness",
+    "LOVE Echo",
+    "LOVE ON BEAT",
+    "Lucky, lucky, lucky tonight ~ J-POP Stylish & Catchy ~",
+    "One more BITE!",
+    "Paper crown",
+    "PIANO　JAM",
+    "Raspy PIANO （リミックス）",
+    "REMIND",
+    "Stay Close Tonight",
+    "Stay in My Heart",
+    "Stay With Me Tonight",
+    "Su I To Ken",
+    "Want You, Hate You",
+    "そのままの言葉で ／ In My Own Words",
+    "二人の未来　～Forever Starts Tonight～",
+    "恋煩い　~LOVESicK~"
+  ],
+  "和楽器": [
+    "Another night ~Brust Jazz Session Ver. ~",
+    "Don't Say Goodnight",
+    "ENDLESS SEN",
+    "Ka･Gu・Ya ~ Marugetta Wagakki House ~",
+    "Ki-Ra-Ri ~ 和楽器ハウス 姫神 ~",
+    "Piano vs",
+    "SAKURA EMOTION",
+    "Stay Close Tonight",
+    "THUNDER BEATS — Echoes of Marugetta",
+    "THUNDER REIGN",
+    "TSUGARU ~Shamisen Session PIANO HOUSE ~",
+    "Wa Ensemble!!",
+    "和楽祭　~風の中へ~",
+    "夏の余白 ／ Summer Left Behind",
+    "月影 ~Shamisen HOUSE~",
+    "鳴らせ夏の夜"
+  ],
+  "strings": [
+    "Carry me into the glow",
+    "Contraste",
+    "ENDLESS SEN",
+    "Marugetta Got Me On Repeat",
+    "MOST PRESIOUS PIANOSAX",
+    "Paper crown",
+    "PIANO REturn",
+    "Raspy PIANO （リミックス）",
+    "SAX ARENA",
+    "SAX Refline",
+    "Trumpet ARENA",
+    "Wake me up",
+    "You Light Me Up",
+    "すれ違い",
+    "まだ好きやけん",
+    "恋煩い　~LOVESicK~"
+  ],
+  "R&B": [
+    "Black light",
+    "CRAZY FOR YOUR LOVE",
+    "Flip-flip",
+    "Lucky, lucky, lucky tonight ~ J-POP Stylish & Catchy ~",
+    "Marugetta Got Me On Repeat",
+    "Paper crown",
+    "Raspy PIANO （リミックス）",
+    "Stay a little longer",
+    "Stay With Me Tonight",
+    "Two Pianos, One Desire (Marugetta Piano House)",
+    "Want You, Hate You",
+    "あと少し",
+    "恋の解像度"
+  ],
+  "EDM": [
+    "After midnight",
+    "Beer Fever 2",
+    "COCA COLA with K",
+    "DRIP DRIP DROP!",
+    "It’s Maru Getta tonight",
+    "One More Night",
+    "SAX ARENA",
+    "Tequila",
     "TRI-TRI-TRICK OR TREAT"
   ],
-  "クリスマス": [
-    "Same X'mas Same LOVE"
+  "K-POP": [
+    "Beer Fever 2",
+    "COCA COLA with K",
+    "COME MY WAY",
+    "DRIP DRIP DROP!",
+    "Glitter POP",
+    "It’s Maru Getta tonight",
+    "One More Night",
+    "Tequila",
+    "THUNDER REIGN"
   ],
-  "春": [
-    "SAKURA EMOTION"
+  "city pop": [
+    "Marugetta Got Me On Repeat",
+    "One more BITE!",
+    "PIANO　JAM",
+    "Stay With Me Tonight",
+    "★M マルゲッタの誘惑 ~ J-POP Stylish & Catchy ~",
+    "そのままの言葉で ／ In My Own Words",
+    "二人の未来　～Forever Starts Tonight～",
+    "余恋　～Yo Re N～",
+    "恋の解像度"
+  ],
+  "J-POP": [
+    "I Can't Let You Go",
+    "I Don't Wanna Lose You",
+    "PRESENT",
+    "Rainy day on the tapping",
+    "REMIND",
+    "Same X'mas Same LOVE",
+    "The Word I Won’t Say",
+    "★M マルゲッタの誘惑 ~ J-POP Stylish & Catchy ~"
+  ],
+  "orchestra": [
+    "Contraste",
+    "It’s Maru Getta tonight",
+    "Little by Little",
+    "OUR STORY",
+    "Piano vs",
+    "String of Violin"
+  ],
+  "jazz": [
+    "Another night ~Brust Jazz Session Ver. ~",
+    "Between Yesterday and Today （リミックス）",
+    "Let the rhythm set me free ~JAZZ HOUSE Ver.~",
+    "Swing It Up",
+    "SWING TONIGHT"
+  ],
+  "swing": [
+    "Another night ~Brust Jazz Session Ver. ~",
+    "Between Yesterday and Today （リミックス）",
+    "Flip-flip",
+    "Swing It Up",
+    "SWING TONIGHT"
+  ],
+  "sax": [
+    "LOVE Echo",
+    "MOST PRESIOUS PIANOSAX",
+    "PIANO CHOPS !",
+    "SAX ARENA",
+    "SAX Refline"
+  ],
+  "violin": [
+    "Black light",
+    "Little by Little",
+    "String of Violin",
+    "恋じゃない"
+  ],
+  "house": [
+    "COCA COLA with K",
+    "Ka･Gu・Ya ~ Marugetta Wagakki House ~",
+    "Tequila",
+    "TRI-TRI-TRICK OR TREAT"
+  ],
+  "story": [
+    "I Can't Let You Go",
+    "I Don't Wanna Lose You",
+    "The Word I Won’t Say"
+  ],
+  "POP": [
+    "Little Happiness",
+    "LOVE ON BEAT",
+    "You Light Me Up"
   ],
   "夏": [
     "Pa-Pi-Pu Summer Lights",
     "夏の余白 ／ Summer Left Behind",
     "鳴らせ夏の夜"
   ],
-  "和": [
-    "Ki-Ra-Ri ~ 和楽器ハウス 姫神 ~",
-    "TSUGARU ~Shamisen Session PIANO HOUSE ~",
-    "Wa Ensemble!!",
-    "和楽祭　~風の中へ~",
-    "月影 ~Shamisen HOUSE~",
-    "Ka･Gu・Ya ~ Marugetta Wagakki House ~"
+  "博多弁": [
+    "Su I To Ken",
+    "あと少し",
+    "まだ好きやけん"
   ],
-  "ピアノ": [
-    "MOST PRESIOUS PIANOSAX",
-    "PIANO CHOPS !",
-    "PIANO REturn",
-    "PIANO　JAM",
-    "Piano vs",
-    "Raspy PIANO （リミックス）",
-    "TSUGARU ~Shamisen Session PIANO HOUSE ~",
-    "Two Pianos, One Desire (Marugetta Piano House)"
+  "conga": [
+    "Butterfly Effect",
+    "Marugetta"
   ],
-  "サックス": [
-    "MOST PRESIOUS PIANOSAX",
-    "SAX ARENA",
-    "SAX Refline"
+  "rap": [
+    "Glitter POP",
+    "Set my heart on fire"
   ],
-  "トランペット": [
+  "trumpet": [
     "PA-PA-PA! (Trumpet Addiction)",
     "Trumpet ARENA"
   ],
-  "ジャズ": [
-    "Another night ~Brust Jazz Session Ver. ~",
-    "Let the rhythm set me free ~JAZZ HOUSE Ver.~",
-    "SWING TONIGHT",
-    "Swing It Up"
+  "instrumental": [
+    "Piano vs",
+    "THUNDER BEATS — Echoes of Marugetta"
   ],
-  "恋": [
-    "余恋　～Yo Re N～",
-    "恋じゃない",
-    "恋の解像度",
-    "恋煩い　~LOVESicK~"
+  "Halloween": [
+    "TRI-TRI-TRICK OR TREAT",
+    "マルゲッタのハロウィン"
   ],
-  "マルゲッタ": [
-    "★M_マルゲッタの誘惑 ~ J-POP Stylish & Catchy ~",
-    "It’s Maru Getta tonight",
-    "Marugetta",
-    "Marugetta Got Me On Repeat",
-    "THUNDER BEATS — Echoes of Marugetta",
-    "Two Pianos, One Desire (Marugetta Piano House)",
-    "マルゲッタのハロウィン",
-    "Ka･Gu・Ya ~ Marugetta Wagakki House ~"
+  "pipe organ": [
+    "Piano vs"
+  ],
+  "春": [
+    "SAKURA EMOTION"
+  ],
+  "X'mas": [
+    "Same X'mas Same LOVE"
+  ],
+  "ska": [
+    "SWING TONIGHT"
   ]
 }
