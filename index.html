@@ -85,6 +85,7 @@
   .rate{flex:none;min-width:58px;border:none;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;
     background:rgba(255,255,255,.22);color:#fff;cursor:pointer;font-variant-numeric:tabular-nums}
   .rate.changed{background:#fff;color:var(--pink-d)}
+  .rate small{font-size:10px;font-weight:600;opacity:.75;margin-left:3px}
 
   /* 検索・タグ（スクロールしても上に残る） */
   .finder{position:sticky;top:0;z-index:5;background:var(--cream);padding:12px 0 8px;
@@ -225,7 +226,7 @@
   </div>
   <div class="vol" id="volRow">🔈<input type="range" id="vol" min="0" max="100" value="70" aria-label="音量">🔊</div>
   <div class="speed"><span>テンポ</span><input type="range" id="rate" min="80" max="120" step="5" value="100" aria-label="テンポ">
-    <button class="rate" id="rateBtn" title="100%に戻す">100%</button></div>
+    <button class="rate" id="rateBtn" title="元のテンポに戻す">100%</button></div>
 </section>
 
 <section class="finder" id="finder">
@@ -650,20 +651,31 @@
 
   function showBpm(){
     const s = current();
-    $('bpm').textContent = s?.bpm ? `♩ ${bpmOf(s)} BPM${rate !== 100 ? `（${rate}%）` : ''}` : '';
+    $('bpm').textContent = s?.bpm ? `♩ ${bpmOf(s)} BPM${rate !== 100 ? `（${Math.round(rate)}%）` : ''}` : '';
     $('bpm').classList.toggle('show', !!s?.bpm);
+    showRate();
+  }
+  // テンポのつまみ：BPMがわかる曲は、その曲のBPMで動かす（例：130BPMなら 104〜156BPM）。わからない曲は %
+  function showRate(){
+    const b = current()?.bpm, el = $('rate');
+    if (b){ el.min = Math.round(b * .8); el.max = Math.round(b * 1.2); el.step = 1; el.value = bpmOf(current()); }
+    else { el.min = 80; el.max = 120; el.step = 5; el.value = Math.round(rate); }
+    fill(el);
+    $('rateBtn').innerHTML = b ? `${bpmOf(current())}<small>BPM</small>` : Math.round(rate) + '%';
+    $('rateBtn').classList.toggle('changed', rate !== 100);
   }
   // 音程を保ったまま再生速度を変える（曲が変わっても defaultPlaybackRate で引き継ぐ）
   function applyRate(){
     for (const d of decks){ d.preservesPitch = d.mozPreservesPitch = d.webkitPreservesPitch = true; d.defaultPlaybackRate = rate / 100; }
     audio.playbackRate = rate / 100;
-    $('rate').value = rate; fill($('rate'));
-    $('rateBtn').textContent = rate + '%'; $('rateBtn').classList.toggle('changed', rate !== 100);
     showBpm();
   }
   function setRate(v){ rate = v; store.set('rate', rate); applyRate(); renderTempos(); renderList(); }
-  $('rate').oninput = e => setRate(+e.target.value);
-  $('rateBtn').onclick = () => { if (rate !== 100){ setRate(100); toast('テンポを100%に戻しました'); } };
+  $('rate').oninput = e => {
+    const b = current()?.bpm, v = +e.target.value;
+    setRate(!b ? v : v === b ? 100 : Math.min(120, Math.max(80, v / b * 100)));
+  };
+  $('rateBtn').onclick = () => { if (rate !== 100){ setRate(100); toast('元のテンポに戻しました'); } };
 
   // --- DJミックス：曲の終わりと次の曲の頭を、テンポと拍をそろえて重ねる ---
   // 曲ごとの拍の位置・実質の終わりは mix.json（scripts/analyze-mix.py で測定）から読む
