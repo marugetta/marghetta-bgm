@@ -175,22 +175,6 @@
   },
   "silence": 301.2
  },
- "DRIP DRIP DROP!": {
-  "beat": 0.45346,
-  "start": 0.17,
-  "end": 294.03,
-  "duration": 294.8,
-  "key": "3A",
-  "in": {
-   "beat": 0.45393,
-   "downbeat": 1.874
-  },
-  "out": {
-   "beat": 0.45172,
-   "downbeat": 249.561
-  },
-  "silence": 294.21
- },
  "DRIP DRIP DROP! Ver2": {
   "beat": 0.44243,
   "start": 0.0,
