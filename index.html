@@ -180,6 +180,12 @@
   .now .star svg{width:26px;height:26px}
   .now .star.on{color:#FFD45C}
   .tag.fav{color:#B7801A}
+  .tag.new{color:#E0482F;font-weight:700}
+  .tag.new.on{background:#E0482F;border-color:#E0482F;color:#fff}
+  .nw{display:inline-block;vertical-align:1px;margin-right:6px;background:#E0482F;color:#fff;border-radius:6px;
+    padding:1px 6px;font-size:10px;font-weight:800;letter-spacing:.04em}
+  .now .nw{display:none;margin:0 0 0 2px;background:#fff;color:#E0482F;border-radius:999px;padding:2px 9px;font-size:11px}
+  .now .nw.show{display:inline-block}
   .tag.fav.on{background:#F2B33D;border-color:#F2B33D;color:#fff}
   .backup{margin:0 16px 40px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);
     display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
@@ -215,7 +221,7 @@
     <div class="meta">
       <div class="eyebrow">NOW PLAYING<button class="star" id="nowStar" aria-label="お気に入り"></button></div>
       <div class="title" id="title">曲を読み込み中…</div>
-      <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="lyr" id="nowLyr">歌詞</button><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button><span class="djb" id="djBadge"></span><button class="qchip" id="djTry" title="今の曲を、次の曲へつなぐ少し前まで進める">⏭ つなぎ目を試す</button></div>
+      <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="lyr" id="nowLyr">歌詞</button><span class="nw" id="nowNew">NEW</span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button><span class="djb" id="djBadge"></span><button class="qchip" id="djTry" title="今の曲を、次の曲へつなぐ少し前まで進める">⏭ つなぎ目を試す</button></div>
     </div>
   </div>
   <div class="seek">
@@ -300,6 +306,9 @@
   let wakeWanted = store.get('wake', true);
   let favs = new Set(store.get('favs', [])); // お気に入り（曲名）。この端末だけに保存
   let favFilter = false;
+  let newFilter = false;
+  const NEW_DAYS = 5; // 曲を追加してから何日「NEW」を出すか
+  const isNew = s => !!s.added && Date.now() - Date.parse(s.added) < NEW_DAYS * 864e5;
   let excluded = new Set(store.get('exclude', [])); // 除外タグ。この端末に記憶（季節外れの曲を外すなど）
   let exclOpen = false;     // 除外タグを選ぶ欄を開いているか
   const STAR = '<svg viewBox="0 0 24 24"><path d="M12 17.3 18.2 21l-1.6-7 5.4-4.7-7.2-.6L12 2 9.2 8.7 2 9.3l5.4 4.7-1.6 7z"/></svg>';
@@ -329,10 +338,11 @@
   function filterLabel(){
     const q = $('q').value.trim();
     const tp = TEMPOS.find(t => t.id === tempoFilter);
-    return [favFilter && '★お気に入り', tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
+    return [newFilter && 'NEW', favFilter && '★お気に入り', tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
   }
   function matches(s){
     if (isExcluded(s) && base().length < songs().length) return false;
+    if (newFilter && !isNew(s)) return false;
     if (favFilter && !favs.has(s.title)) return false;
     if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
     if (tempoFilter && tempoOf(s) !== tempoFilter) return false;
@@ -380,6 +390,7 @@
     $('title').textContent = s.title;
     showBpm(); showFavs();
     $('nowLyr').classList.toggle('show', !!s.lyrics);
+    $('nowNew').classList.toggle('show', isNew(s));
     updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
@@ -465,6 +476,16 @@
       favFilter = !favFilter; renderTags(); renderList();
     };
     el.appendChild(f);
+    // 新しく追加した曲（NEW_DAYS 日以内）があるときだけ「NEW」を出す
+    const nNew = base().filter(i => isNew(songs()[i])).length;
+    if (!nNew) newFilter = false;
+    if (nNew){
+      const n = document.createElement('button');
+      n.className = 'tag new' + (newFilter ? ' on' : '');
+      n.innerHTML = `NEW<small>${nNew}</small>`;
+      n.onclick = () => { newFilter = !newFilter; renderTags(); renderList(); };
+      el.insertBefore(n, f);
+    }
     names.forEach(t => {
       const b = document.createElement('button');
       b.className = 'tag' + (t === tagFilter ? ' on' : '');
@@ -549,6 +570,7 @@
       li.className = (i === cur ? 'cur' : '') + (queueLabel && !queue.includes(i) ? ' out' : '');
       li.innerHTML = `<span class="n">${i === cur && !audio.paused ? '♪' : k+1}</span><div class="b"><div class="t"></div><div class="tg"></div></div>${s.lyrics ? '<button class="lyr">歌詞</button>' : ''}<button class="star${favs.has(s.title) ? ' on' : ''}" aria-label="お気に入り">${STAR}</button>${s.bpm ? `<span class="bp">${bpmOf(s)}<small>BPM</small></span>` : ''}`;
       li.querySelector('.t').textContent = s.title;
+      if (isNew(s)) li.querySelector('.t').insertAdjacentHTML('afterbegin', '<span class="nw">NEW</span>');
       li.querySelector('.star').onclick = e => { e.stopPropagation(); toggleFav(s); };
       if (s.lyrics) li.querySelector('.lyr').onclick = e => { e.stopPropagation(); openLyrics(s); };
       for (const t of s.tags || []){ const sp = document.createElement('span'); sp.textContent = '#' + t; li.querySelector('.tg').appendChild(sp); }

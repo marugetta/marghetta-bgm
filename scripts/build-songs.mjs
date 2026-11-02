@@ -2,6 +2,7 @@
 // GitHub Actions が自動で実行するので、手で動かす必要はありません。
 import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, extname, basename, relative, sep } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = process.argv[2] || '.';
 const MUSIC = join(ROOT, 'music');
@@ -25,12 +26,24 @@ function walk(dir) {
   });
 }
 
+// 曲を追加した日（git の履歴から）。プレーヤーで「NEW」を出すのに使う
+const addedAt = new Map();
+try {
+  const log = execFileSync('git', ['-c', 'core.quotePath=false', 'log', '--no-renames', '--diff-filter=A', '--name-only', '--format=@%cI', '--', 'music'],
+    { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 << 20 });
+  let date = '';
+  for (const line of log.split('\n')) {
+    if (line.startsWith('@')) date = line.slice(1);
+    else if (line && !addedAt.has(line.normalize('NFC'))) addedAt.set(line.normalize('NFC'), date); // 新しい順に出るので、最初のものが最後に追加した日
+  }
+} catch { console.warn('git の履歴が読めないため、追加日（NEW）は付けません'); }
+
 const toTitle = name => name.normalize('NFC').replace(/_/g, ' ').trim();
-const toSong = p => ({
-  title: toTitle(basename(p, extname(p))),
-  file: relative(ROOT, p).split(sep).join('/').normalize('NFC'),
-  tags: [],
-});
+const toSong = p => {
+  const file = relative(ROOT, p).split(sep).join('/').normalize('NFC');
+  const added = addedAt.get(file);
+  return { title: toTitle(basename(p, extname(p))), file, tags: [], ...(added && { added }) };
+};
 const withBpm = s => { const v = bpmMap[s.title]; return v ? { ...s, bpm: v } : s; };
 // mix.json（拍の位置・実質の終わり・キー）は scripts/analyze-mix.py で作ります。DJミックスで使います
 const withMix = s => { const m = mixMap[s.title]; return m ? { ...s, mix: m } : s; };
