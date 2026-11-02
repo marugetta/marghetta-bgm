@@ -607,6 +607,22 @@
   },
   "silence": 301.22
  },
+ "POP! POP! CHAMPAGNE!": {
+  "beat": 0.44437,
+  "start": 0.74,
+  "end": 285.14,
+  "silence": 285.2,
+  "duration": 285.2,
+  "key": "4A",
+  "in": {
+   "beat": 0.44465,
+   "downbeat": 0.891
+  },
+  "out": {
+   "beat": 0.44401,
+   "downbeat": 240.474
+  }
+ },
  "PRESENT": {
   "beat": 0.4595,
   "start": 0.2,

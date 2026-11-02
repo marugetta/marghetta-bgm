@@ -167,7 +167,8 @@
     "SAX ARENA",
     "Tequila",
     "TRI-TRI-TRICK OR TREAT",
-    "DRIP DRIP DROP! Ver2"
+    "DRIP DRIP DROP! Ver2",
+    "POP! POP! CHAMPAGNE!"
   ],
   "K-POP": [
     "Beer Fever 2",
@@ -178,7 +179,8 @@
     "One More Night",
     "Tequila",
     "THUNDER REIGN",
-    "DRIP DRIP DROP! Ver2"
+    "DRIP DRIP DROP! Ver2",
+    "POP! POP! CHAMPAGNE!"
   ],
   "city pop": [
     "Marugetta Got Me On Repeat",
@@ -209,6 +211,14 @@
     "Piano vs",
     "String of Violin"
   ],
+  "house": [
+    "COCA COLA with K",
+    "Ka･Gu・Ya ~ Marugetta Wagakki House ~",
+    "Tequila",
+    "TRI-TRI-TRICK OR TREAT",
+    "DRIP DRIP DROP! Ver2",
+    "POP! POP! CHAMPAGNE!"
+  ],
   "jazz": [
     "Another night ~Brust Jazz Session Ver. ~",
     "Between Yesterday and Today （リミックス）",
@@ -229,13 +239,6 @@
     "PIANO CHOPS !",
     "SAX ARENA",
     "SAX Refline"
-  ],
-  "house": [
-    "COCA COLA with K",
-    "Ka･Gu・Ya ~ Marugetta Wagakki House ~",
-    "Tequila",
-    "TRI-TRI-TRICK OR TREAT",
-    "DRIP DRIP DROP! Ver2"
   ],
   "violin": [
     "Black light",
