@@ -79,7 +79,8 @@
     "恋煩い　~LOVESicK~",
     "月影 ~Shamisen HOUSE~",
     "鳴らせ夏の夜",
-    "消して、消さないで。"
+    "消して、消さないで。",
+    "信じさせて、Santa Claus"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -103,7 +104,8 @@
     "そのままの言葉で ／ In My Own Words",
     "二人の未来　～Forever Starts Tonight～",
     "恋煩い　~LOVESicK~",
-    "消して、消さないで。"
+    "消して、消さないで。",
+    "信じさせて、Santa Claus"
   ],
   "和楽器": [
     "Another night ~Brust Jazz Session Ver. ~",
@@ -241,15 +243,16 @@
     "String of Violin",
     "恋じゃない"
   ],
+  "POP": [
+    "Little Happiness",
+    "LOVE ON BEAT",
+    "You Light Me Up",
+    "信じさせて、Santa Claus"
+  ],
   "story": [
     "I Can't Let You Go",
     "I Don't Wanna Lose You",
     "The Word I Won’t Say"
-  ],
-  "POP": [
-    "Little Happiness",
-    "LOVE ON BEAT",
-    "You Light Me Up"
   ],
   "夏": [
     "Pa-Pi-Pu Summer Lights",
@@ -281,14 +284,15 @@
     "TRI-TRI-TRICK OR TREAT",
     "マルゲッタのハロウィン"
   ],
+  "X'mas": [
+    "Same X'mas Same LOVE",
+    "信じさせて、Santa Claus"
+  ],
   "pipe organ": [
     "Piano vs"
   ],
   "春": [
     "SAKURA EMOTION"
-  ],
-  "X'mas": [
-    "Same X'mas Same LOVE"
   ],
   "ska": [
     "SWING TONIGHT"

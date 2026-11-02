@@ -1247,6 +1247,22 @@
   },
   "silence": 326.6
  },
+ "信じさせて、Santa Claus": {
+  "beat": 0.45324,
+  "start": 0.22,
+  "end": 350.62,
+  "silence": 351.69,
+  "duration": 352.68,
+  "key": "5B",
+  "in": {
+   "beat": 0.45224,
+   "downbeat": 0.463
+  },
+  "out": {
+   "beat": 0.45355,
+   "downbeat": 305.65
+  }
+ },
  "和楽祭　~風の中へ~": {
   "beat": 0.45968,
   "start": 1.16,
