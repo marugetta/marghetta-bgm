@@ -42,6 +42,14 @@
     box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 0 0 3px rgba(255,255,255,.15)}
   .playing .disc{animation:spin 5s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  /* スクラッチ：レコードを指でこする */
+  .scr .disc{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none;
+    box-shadow:0 6px 16px rgba(0,0,0,.25),inset 0 0 0 3px rgba(255,255,255,.15),0 0 0 3px rgba(255,255,255,.55)}
+  .scr .disc.hold{cursor:grabbing;animation:none}
+  .scr .disc.wait{opacity:.6}
+  .scrb{margin-left:8px;border:none;border-radius:999px;padding:2px 9px;font-size:11px;letter-spacing:0;font-weight:700;
+    background:rgba(255,255,255,.22);color:#fff;cursor:pointer;vertical-align:1px}
+  .scrb.on{background:#fff;color:var(--pink-d)}
   .meta{min-width:0;flex:1}
   .eyebrow{font-size:11px;letter-spacing:.12em;opacity:.85}
   .title{font-size:19px;font-weight:800;line-height:1.3;margin-top:4px;
@@ -217,9 +225,9 @@
 
 <section class="now" id="now">
   <div class="np">
-    <div class="disc"></div>
+    <div class="disc" id="disc"></div>
     <div class="meta">
-      <div class="eyebrow">NOW PLAYING<button class="star" id="nowStar" aria-label="お気に入り"></button></div>
+      <div class="eyebrow"><span>NOW PLAYING<button class="scrb" id="scrBtn" title="レコードを指でこすってスクラッチ">🎛 スクラッチ</button></span><button class="star" id="nowStar" aria-label="お気に入り"></button></div>
       <div class="title" id="title">曲を読み込み中…</div>
       <div class="sub"><span id="sub">&nbsp;</span><span class="bpm" id="bpm"></span><button class="lyr" id="nowLyr">歌詞</button><span class="nw" id="nowNew">NEW</span><button class="qchip" id="qchip" aria-label="絞り込み再生を解除"></button><span class="djb" id="djBadge"></span><button class="qchip" id="djTry" title="今の曲を、次の曲へつなぐ少し前まで進める">⏭ つなぎ目を試す</button></div>
     </div>
@@ -391,6 +399,7 @@
     showBpm(); showFavs();
     $('nowLyr').classList.toggle('show', !!s.lyrics);
     $('nowNew').classList.toggle('show', isNew(s));
+    if (scr.on) scrPrepare(s);
     updateSub();
     document.title = `♪ ${s.title} | マルゲッタ BGM`;
     renderList();
@@ -906,7 +915,7 @@
   const onDeck = (ev, fn) => decks.forEach(d => d.addEventListener(ev, () => { if (d === audio) fn(); }));
   onDeck('play', () => { advancing = false; setTimeout(prefetchNext, 3000); setPlaybackState('playing'); $('now').classList.add('playing'); $('playIcon').innerHTML = ICON_PAUSE; renderList(); applyWake(); });
   onDeck('pause', () => { cancelAdvance(); if (dj?.started) djAbort(); setPlaybackState('paused'); $('now').classList.remove('playing'); $('playIcon').innerHTML = ICON_PLAY; renderList(); applyWake(); });
-  onDeck('ended', () => { if (dj?.started) djFinish(); else if (!advancing) next(true); });
+  onDeck('ended', () => { if (scr.holding) return; if (dj?.started) djFinish(); else if (!advancing) next(true); });
   onDeck('loadedmetadata', () => { audio.playbackRate = rate / 100; }); // 一部の端末は曲ごとに速度が戻るため
   // 読み込めないとき：電波がない（または続けて失敗する）なら、飛ばさずに電波が戻るのを待って同じ曲からやり直す
   let failCount = 0, waitOnline = false;
@@ -934,7 +943,7 @@
   function cancelAdvance(){ clearTimeout(advanceTimer); advanceTimer = null; }
   function scheduleAdvance(){
     const hasNext = pendingSwitch != null || pos < order.length - 1 || repeat;
-    if (advanceTimer || advancing || dj || !hasNext || audio.paused || !audio.duration) return;
+    if (advanceTimer || advancing || dj || scr.holding || !hasNext || audio.paused || !audio.duration) return;
     // 曲の最後に無音がある曲は、音が本当になくなったところで切り替える（mix.json の silence。余韻は残す）
     const end = Math.min(audio.duration, (current()?.mix?.silence ?? audio.duration) + 0.05);
     const remain = (end - audio.currentTime) / audio.playbackRate;
@@ -956,6 +965,133 @@
   }
 
   // --- 起動 ---
+  // --- スクラッチ：レコードを指でこすると、その動きのとおりに曲が前後に動く ---
+  // 指で触っている間だけ、曲を Web Audio で鳴らす（逆回しもできるように、曲をまるごと読み込んでおく）。
+  // ふつうの audio は消音にして流したままにし、指を離したらその位置に合わせて音を戻す（画面ロック中の再生はそのまま）
+  const SCR_TURN = 1.8;  // レコード1回転ぶんの秒数（33回転のレコードと同じ）
+  const SCR_WORKLET = `class Scr extends AudioWorkletProcessor{
+    constructor(){ super(); this.ch=null; this.pos=0; this.vel=0; this.target=0; this.hold=true; this.motor=1; this.g=0; this.gt=0; this.t=0;
+      this.port.onmessage = e => { const d = e.data;
+        if (d.ch) this.ch = d.ch;
+        if ('pos' in d){ this.pos = this.target = d.pos; this.vel = 0; }
+        if ('target' in d) this.target = d.target;
+        if ('hold' in d) this.hold = d.hold;
+        if ('motor' in d) this.motor = d.motor;
+        if ('on' in d) this.gt = d.on ? 1 : 0; }; }
+    process(_, outs){
+      const out = outs[0], ch = this.ch; if (!ch) return true;
+      const len = ch[0].length, n = out[0].length;
+      for (let i = 0; i < n; i++){
+        // 指で押さえている間は指の位置を追いかけ、離したらモーターでいつもの速さに戻る
+        const want = this.hold ? (this.target - this.pos) / (sampleRate * 0.015) : this.motor;
+        this.vel += (want - this.vel) * (this.hold ? 0.004 : 0.0008);
+        if (this.vel > 12) this.vel = 12; else if (this.vel < -12) this.vel = -12;
+        this.pos += this.vel;
+        if (this.pos < 0){ this.pos = 0; this.vel = 0; } else if (this.pos > len - 2){ this.pos = len - 2; this.vel = 0; }
+        this.g += (this.gt - this.g) * 0.003;
+        const k = this.pos | 0, f = this.pos - k;
+        for (let c = 0; c < out.length; c++){ const d = ch[Math.min(c, ch.length - 1)]; out[c][i] = (d[k] + (d[k+1] - d[k]) * f) * this.g; }
+      }
+      if (++this.t % 8 === 0) this.port.postMessage(this.pos);
+      return true; } }
+  registerProcessor('scr', Scr);`;
+  const scr = { on: false, ctx: null, node: null, vol: null, file: '', ready: false, holding: false, pos: 0 };
+
+  async function scrStart(){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC || !window.AudioWorkletNode){ toast('この端末ではスクラッチを使えません'); return false; }
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {} // iPhone のマナーモードで音が消えないように
+    scr.ctx = new AC();
+    await scr.ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([SCR_WORKLET], { type: 'text/javascript' })));
+    scr.node = new AudioWorkletNode(scr.ctx, 'scr', { outputChannelCount: [2] });
+    scr.vol = scr.ctx.createGain();
+    scr.node.connect(scr.vol).connect(scr.ctx.destination);
+    scr.node.port.onmessage = e => { scr.pos = e.data; if (scr.holding) scrShowAngle(); };
+    return true;
+  }
+  function scrStop(){
+    scr.ctx?.close().catch(() => {});
+    Object.assign(scr, { ctx: null, node: null, vol: null, file: '', ready: false, holding: false });
+    $('disc').classList.remove('hold', 'wait'); $('disc').style.transform = '';
+  }
+  // 今の曲を、逆回しできる形（波形）にして用意しておく
+  async function scrPrepare(s){
+    if (!scr.node || !s || scr.file === s.file) return;
+    scr.file = s.file; scr.ready = false; $('disc').classList.add('wait');
+    try {
+      const buf = await (await fetch(prefetched.get(s.file) || urlOf(s.file))).arrayBuffer();
+      const ab = await scr.ctx.decodeAudioData(buf);
+      if (scr.file !== s.file || !scr.node) return; // 用意している間に曲が変わった
+      scr.node.port.postMessage({ ch: [...Array(Math.min(2, ab.numberOfChannels)).keys()].map(c => ab.getChannelData(c)) });
+      scr.ready = true;
+    } catch { if (scr.file === s.file) scr.file = ''; }
+    if (scr.file === s.file || !scr.file) $('disc').classList.remove('wait');
+  }
+
+  let scrA0 = 0, scrP0 = 0, scrTarget = 0, scrDeg0 = 0, scrWasPlaying = false;
+  const scrAngle = e => { const r = $('disc').getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height/2, e.clientX - r.left - r.width/2); };
+  function scrShowAngle(){ $('disc').style.transform = `rotate(${scrDeg0 + (scr.pos - scrP0) / scr.ctx.sampleRate / SCR_TURN * 360}deg)`; }
+  $('disc').addEventListener('pointerdown', e => {
+    if (!scr.on || !audio.src) return;
+    if (!scr.ready){ toast('スクラッチの準備中です。少し待ってからもう一度どうぞ'); return; }
+    e.preventDefault(); $('disc').setPointerCapture(e.pointerId);
+    scr.ctx.resume();
+    // 回っているレコードを、今の角度のまま止める
+    const m = new DOMMatrix(getComputedStyle($('disc')).transform);
+    scrDeg0 = Math.atan2(m.b, m.a) * 180 / Math.PI;
+    scr.holding = true; cancelAdvance();
+    scrWasPlaying = !audio.paused;
+    scr.pos = scrP0 = scrTarget = audio.currentTime * scr.ctx.sampleRate; scrA0 = scrAngle(e);
+    scr.vol.gain.value = isIOS ? 1 : audio.volume;
+    scr.node.port.postMessage({ pos: scrP0, hold: true, on: true });
+    audio.muted = true;
+    $('disc').classList.add('hold'); scrShowAngle();
+  });
+  $('disc').addEventListener('pointermove', e => {
+    if (!scr.holding) return;
+    let d = scrAngle(e) - scrA0;
+    d -= Math.round(d / (2 * Math.PI)) * 2 * Math.PI; // 1周をまたいでも連続するように
+    scrA0 += d;
+    const len = (audio.duration || 1e4) * scr.ctx.sampleRate;
+    scrTarget = Math.max(0, Math.min(len, scrTarget + d / (2 * Math.PI) * SCR_TURN * scr.ctx.sampleRate));
+    scr.node.port.postMessage({ target: scrTarget });
+  });
+  function scrRelease(){
+    if (!scr.holding) return;
+    scr.holding = false;
+    const deg = scrDeg0 + (scr.pos - scrP0) / scr.ctx.sampleRate / SCR_TURN * 360;
+    if (scrWasPlaying){
+      // モーターで元の速さに戻しながら、ふつうの audio をその位置に合わせ、合ったら入れ替える
+      scr.node.port.postMessage({ hold: false, motor: rate / 100 });
+      let done = false;
+      const back = () => {
+        if (done) return; done = true;
+        audio.muted = false; scr.node?.port.postMessage({ on: false });
+        if (audio.paused || audio.ended) audio.play().catch(() => {});
+      };
+      audio.addEventListener('seeked', back, { once: true });
+      setTimeout(back, 600); // 位置合わせの知らせが来ないときも、音を戻す
+      audio.currentTime = scr.pos / scr.ctx.sampleRate + 0.08 * rate / 100;
+    } else {
+      scr.node.port.postMessage({ on: false });
+      audio.currentTime = scr.pos / scr.ctx.sampleRate; audio.muted = false;
+    }
+    // レコードの回転を、止めた角度から続ける
+    $('disc').classList.remove('hold'); $('disc').style.transform = '';
+    $('disc').style.animationDelay = `${-(((deg % 360) + 360) % 360) / 360 * 5}s`;
+  }
+  $('disc').addEventListener('pointerup', scrRelease);
+  $('disc').addEventListener('pointercancel', scrRelease);
+  $('scrBtn').onclick = async () => {
+    if (scr.on){ scr.on = false; scrRelease(); scrStop(); }
+    else {
+      try { if (!await scrStart()) return; } catch { toast('この端末ではスクラッチを使えません'); scrStop(); return; }
+      scr.on = true; scrPrepare(current());
+      toast('レコードを指でこすると、スクラッチできます');
+    }
+    $('now').classList.toggle('scr', scr.on); $('scrBtn').classList.toggle('on', scr.on);
+  };
+
   const v = store.get('vol', 70); $('vol').value = v; for (const d of decks) d.volume = v/100; fill($('vol'));
   applyRate(); showFavs();
   syncChips();
