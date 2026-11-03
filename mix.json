@@ -303,6 +303,22 @@
   },
   "silence": 362.39
  },
+ "IVORY RUSH": {
+  "beat": 0.46149,
+  "start": 0.62,
+  "end": 280.51,
+  "silence": 283.17,
+  "duration": 283.8,
+  "key": "12B",
+  "in": {
+   "beat": 0.46142,
+   "downbeat": 0.622
+  },
+  "out": {
+   "beat": 0.46158,
+   "downbeat": 236.919
+  }
+ },
  "It’s Maru Getta tonight": {
   "beat": 0.40992,
   "start": 1.07,
