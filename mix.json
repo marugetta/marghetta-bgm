@@ -1119,6 +1119,22 @@
   },
   "silence": 173.24
  },
+ "White Keys, Black Feelings — 白い旋律、黒い感情": {
+  "beat": 0.45421,
+  "start": 0.23,
+  "end": 320.59,
+  "silence": 321.74,
+  "duration": 322.64,
+  "key": "12B",
+  "in": {
+   "beat": 0.45755,
+   "downbeat": 0.712
+  },
+  "out": {
+   "beat": 0.45444,
+   "downbeat": 277.336
+  }
+ },
  "You Light Me Up": {
   "beat": 0.46106,
   "start": 0.1,
