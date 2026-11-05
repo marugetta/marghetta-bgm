@@ -133,8 +133,13 @@
   .tempo small{color:var(--muted);margin-left:4px}
   .tempo.on{background:var(--ink);border-color:var(--ink);color:#fff}
   .tempo.on small{color:rgba(255,255,255,.75)}
-  .actions{display:flex;align-items:center;gap:8px;margin:12px 16px 0}
-  .count{flex:1;font-size:13px;color:var(--muted)}
+  .actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 16px 0}
+  .plays{display:flex;gap:8px;margin-left:auto}
+  @media (max-width:520px){ .plays{flex:1 1 100%} .plays .act{flex:1;justify-content:center} }
+  .count{flex:1;min-width:0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sort{flex:none;max-width:150px;border:1px solid var(--line);border-radius:999px;padding:7px 24px 7px 10px;font-size:12px;
+    color:var(--ink);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 6px center/16px;
+    -webkit-appearance:none;appearance:none;cursor:pointer}
   .count b{color:var(--ink);font-size:15px}
   .act{border:none;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;
     display:flex;align-items:center;gap:6px;white-space:nowrap}
@@ -264,8 +269,18 @@
   <div class="row tempos" id="tempos"></div>
   <div class="actions">
     <div class="count" id="count"></div>
+    <select class="sort" id="sort" aria-label="並び順">
+      <option value="title">曲名 昇順</option>
+      <option value="title-desc">曲名 降順</option>
+      <option value="new">追加日 新しい順</option>
+      <option value="old">追加日 古い順</option>
+      <option value="bpm">BPM 遅い順</option>
+      <option value="bpm-desc">BPM 速い順</option>
+    </select>
+    <div class="plays">
     <button class="act seq" id="playSeqBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>順番に再生</button>
     <button class="act shf" id="playShfBtn"><svg viewBox="0 0 24 24"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2 1.4-1.4ZM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4h-5.5Zm.3 9.4-1.4 1.4 3.1 3.1-2 2.1H20v-5.5l-2 2-3.2-3.1Z"/></svg>シャッフル</button>
+    </div>
   </div>
 </section>
 <ol id="list"></ol>
@@ -340,7 +355,19 @@
   const norm = s => s.normalize('NFKC').toLowerCase();
   const isExcluded = s => (s.tags || []).some(t => excluded.has(t));
   // 再生の対象にする曲（除外タグの曲を除く）。全部除外されてしまうときは全曲
-  const base = () => { const all = [...songs().keys()], b = all.filter(i => !isExcluded(songs()[i])); return b.length ? b : all; };
+  // 並び順（一覧と「順番に再生」の順番）。この端末に記憶
+  let sortBy = store.get('sort', 'title');
+  const byTitle = (a, b) => a.title.localeCompare(b.title, 'ja', { numeric: true });
+  const SORTS = {
+    'title': byTitle,
+    'title-desc': (a, b) => byTitle(b, a),
+    'new': (a, b) => (b.added || '').localeCompare(a.added || '') || byTitle(a, b),
+    'old': (a, b) => (a.added || '').localeCompare(b.added || '') || byTitle(a, b),
+    'bpm': (a, b) => (a.bpm || 999) - (b.bpm || 999) || byTitle(a, b),
+    'bpm-desc': (a, b) => (b.bpm || 0) - (a.bpm || 0) || byTitle(a, b),
+  };
+  const sorted = list => [...list].sort((i, j) => (SORTS[sortBy] || byTitle)(songs()[i], songs()[j]));
+  const base = () => { const all = sorted([...songs().keys()]), b = all.filter(i => !isExcluded(songs()[i])); return b.length ? b : all; };
 
   // --- 検索・タグの絞り込み ---
   function filterLabel(){
@@ -349,7 +376,7 @@
     return [newFilter && 'NEW', favFilter && '★お気に入り', tagFilter && '#' + tagFilter, tp && tp.label, q && `「${q}」`].filter(Boolean).join(' ');
   }
   function matches(s){
-    if (isExcluded(s) && base().length < songs().length) return false;
+    if (isExcluded(s) && !songs().every(isExcluded)) return false;
     if (newFilter && !isNew(s)) return false;
     if (favFilter && !favs.has(s.title)) return false;
     if (tagFilter && !(s.tags || []).includes(tagFilter)) return false;
@@ -361,7 +388,7 @@
       ? (s.tags || []).some(t => norm(t).includes(w.slice(1)))
       : norm(s.title).includes(w) || (s.tags || []).some(t => norm(t).includes(w)));
   }
-  const visible = () => songs().map((s, i) => i).filter(i => matches(songs()[i]));
+  const visible = () => base().filter(i => matches(songs()[i]));
 
   function makeOrder(startSong){
     order = [...queue];
@@ -538,7 +565,7 @@
     makeOrder(queue.includes(cur) ? cur : null);
     if (cur != null && !queue.includes(cur)){
       if (shuffle) order.unshift(cur), pos = 0;
-      else { const k = order.findIndex(i => i > cur); pos = k < 0 ? order.length : k; order.splice(pos, 0, cur); }
+      else { const all = sorted([...songs().keys()]), r = all.indexOf(cur); const k = order.findIndex(i => all.indexOf(i) > r); pos = k < 0 ? order.length : k; order.splice(pos, 0, cur); }
     }
     if (audio.src) { updateSub(); prefetchNext(); }
     toast(excluded.has(t) ? `#${t} の曲を除外しました` : `#${t} の除外をやめました`);
@@ -646,6 +673,13 @@
   $('q').onkeydown = e => { if (e.key === 'Enter') e.target.blur(); };
   $('clearBtn').onclick = () => { $('q').value = ''; renderList(); };
   $('playSeqBtn').onclick = () => playVisible('seq');
+  $('sort').value = SORTS[sortBy] ? sortBy : 'title';
+  $('sort').onchange = e => {
+    sortBy = e.target.value; store.set('sort', sortBy);
+    // 再生の順番も並べ直す（シャッフル中はそのまま）。今の曲はそのまま流す
+    queue = sorted(queue); if (!shuffle) makeOrder(order[pos]);
+    updateSub(); renderList();
+  };
   $('playShfBtn').onclick = () => playVisible('shf');
   $('qchip').onclick = () => { setQueue(base()); makeOrder(order[pos]); updateSub(); renderList();
     toast('全曲の再生に戻しました'); };
