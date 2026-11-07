@@ -415,6 +415,22 @@
   },
   "silence": 302.8
  },
+ "Laugh It Away": {
+  "beat": 0.44394,
+  "start": 0.3,
+  "end": 311.17,
+  "silence": 311.68,
+  "duration": 311.68,
+  "key": "8A",
+  "in": {
+   "beat": 0.44297,
+   "downbeat": 0.313
+  },
+  "out": {
+   "beat": 0.44389,
+   "downbeat": 266.657
+  }
+ },
  "Let the rhythm set me free ~JAZZ HOUSE Ver.~": {
   "beat": 0.46249,
   "start": 0.0,
