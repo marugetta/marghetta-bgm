@@ -559,6 +559,22 @@
   },
   "silence": 297.1
  },
+ "Over and Over Again （リミックス）": {
+  "beat": 0.43974,
+  "start": 0.22,
+  "end": 310.61,
+  "silence": 311.92,
+  "duration": 311.92,
+  "key": "6A",
+  "in": {
+   "beat": 0.43938,
+   "downbeat": 0.572
+  },
+  "out": {
+   "beat": 0.44102,
+   "downbeat": 267.321
+  }
+ },
  "PA-PA-PA! (Trumpet Addiction)": {
   "beat": 0.45022,
   "start": 0.15,
