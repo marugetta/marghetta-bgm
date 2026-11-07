@@ -303,6 +303,22 @@
   },
   "silence": 362.39
  },
+ "I WISH I DIDN'T LOVE YOU　～好きにならなければ～": {
+  "beat": 0.44314,
+  "start": 0.21,
+  "end": 309.77,
+  "silence": 311.17,
+  "duration": 311.92,
+  "key": "1B",
+  "in": {
+   "beat": 0.44196,
+   "downbeat": 1.318
+  },
+  "out": {
+   "beat": 0.44354,
+   "downbeat": 266.3
+  }
+ },
  "IVORY RUSH": {
   "beat": 0.46149,
   "start": 0.62,
