@@ -319,6 +319,22 @@
    "downbeat": 266.3
   }
  },
+ "I'm NOT OKAY!": {
+  "beat": 0.44371,
+  "start": 0.38,
+  "end": 329.62,
+  "silence": 332.0,
+  "duration": 332.0,
+  "key": "6B",
+  "in": {
+   "beat": 0.44166,
+   "downbeat": 0.793
+  },
+  "out": {
+   "beat": 0.44468,
+   "downbeat": 284.624
+  }
+ },
  "IVORY RUSH": {
   "beat": 0.46149,
   "start": 0.62,

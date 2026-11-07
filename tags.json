@@ -85,7 +85,8 @@
     "IVORY RUSH",
     "Over and Over Again",
     "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
-    "Laugh It Away"
+    "Laugh It Away",
+    "I'm NOT OKAY!"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -227,6 +228,14 @@
     "DRIP DRIP DROP! Ver2",
     "POP! POP! CHAMPAGNE!"
   ],
+  "POP": [
+    "Little Happiness",
+    "LOVE ON BEAT",
+    "You Light Me Up",
+    "信じさせて、Santa Claus",
+    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
+    "I'm NOT OKAY!"
+  ],
   "jazz": [
     "Another night ~Brust Jazz Session Ver. ~",
     "Between Yesterday and Today （リミックス）",
@@ -255,28 +264,22 @@
     "恋じゃない",
     "Over and Over Again"
   ],
-  "POP": [
-    "Little Happiness",
-    "LOVE ON BEAT",
-    "You Light Me Up",
-    "信じさせて、Santa Claus",
-    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～"
-  ],
   "story": [
     "I Can't Let You Go",
     "I Don't Wanna Lose You",
     "The Word I Won’t Say",
     "I WISH I DIDN'T LOVE YOU　～好きにならなければ～"
   ],
+  "博多弁": [
+    "Su I To Ken",
+    "あと少し",
+    "まだ好きやけん",
+    "I'm NOT OKAY!"
+  ],
   "夏": [
     "Pa-Pi-Pu Summer Lights",
     "夏の余白 ／ Summer Left Behind",
     "鳴らせ夏の夜"
-  ],
-  "博多弁": [
-    "Su I To Ken",
-    "あと少し",
-    "まだ好きやけん"
   ],
   "conga": [
     "Butterfly Effect",
