@@ -687,6 +687,22 @@
   },
   "silence": 301.22
  },
+ "PLAY IT WILD": {
+  "beat": 0.44348,
+  "start": 0.27,
+  "end": 311.99,
+  "silence": 313.04,
+  "duration": 313.04,
+  "key": "6A",
+  "in": {
+   "beat": 0.44088,
+   "downbeat": 1.969
+  },
+  "out": {
+   "beat": 0.44404,
+   "downbeat": 268.458
+  }
+ },
  "POP! POP! CHAMPAGNE!": {
   "beat": 0.44437,
   "start": 0.74,

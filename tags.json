@@ -86,7 +86,8 @@
     "Over and Over Again",
     "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
     "Laugh It Away",
-    "I'm NOT OKAY!"
+    "I'm NOT OKAY!",
+    "PLAY IT WILD"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -177,7 +178,8 @@
     "DRIP DRIP DROP! Ver2",
     "POP! POP! CHAMPAGNE!",
     "White Keys, Black Feelings — 白い旋律、黒い感情",
-    "IVORY RUSH"
+    "IVORY RUSH",
+    "PLAY IT WILD"
   ],
   "K-POP": [
     "Beer Fever 2",
@@ -236,6 +238,14 @@
     "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
     "I'm NOT OKAY!"
   ],
+  "violin": [
+    "Black light",
+    "Little by Little",
+    "String of Violin",
+    "恋じゃない",
+    "Over and Over Again",
+    "PLAY IT WILD"
+  ],
   "jazz": [
     "Another night ~Brust Jazz Session Ver. ~",
     "Between Yesterday and Today （リミックス）",
@@ -257,13 +267,6 @@
     "SAX ARENA",
     "SAX Refline"
   ],
-  "violin": [
-    "Black light",
-    "Little by Little",
-    "String of Violin",
-    "恋じゃない",
-    "Over and Over Again"
-  ],
   "story": [
     "I Can't Let You Go",
     "I Don't Wanna Lose You",
@@ -281,6 +284,11 @@
     "夏の余白 ／ Summer Left Behind",
     "鳴らせ夏の夜"
   ],
+  "trumpet": [
+    "PA-PA-PA! (Trumpet Addiction)",
+    "Trumpet ARENA",
+    "PLAY IT WILD"
+  ],
   "conga": [
     "Butterfly Effect",
     "Marugetta"
@@ -288,10 +296,6 @@
   "rap": [
     "Glitter POP",
     "Set my heart on fire"
-  ],
-  "trumpet": [
-    "PA-PA-PA! (Trumpet Addiction)",
-    "Trumpet ARENA"
   ],
   "instrumental": [
     "Piano vs",
