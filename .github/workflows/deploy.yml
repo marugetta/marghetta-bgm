@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false   # 公開の途中で取り消すと、GitHub 側の公開が詰まることがあるため、順番待ちにする
 
 jobs:
   deploy:
@@ -42,3 +42,5 @@ jobs:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000   # 公開に時間がかかるときも30分まで待つ（初期値は10分）
