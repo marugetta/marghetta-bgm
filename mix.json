@@ -1391,6 +1391,22 @@
    "downbeat": 305.65
   }
  },
+ "午前零時の余白 — After Midnight": {
+  "beat": 0.46042,
+  "start": 0.1,
+  "end": 351.81,
+  "silence": 352.48,
+  "duration": 353.04,
+  "key": "5B",
+  "in": {
+   "beat": 0.45918,
+   "downbeat": 1.029
+  },
+  "out": {
+   "beat": 0.46072,
+   "downbeat": 308.593
+  }
+ },
  "和楽祭　~風の中へ~": {
   "beat": 0.45968,
   "start": 1.16,
