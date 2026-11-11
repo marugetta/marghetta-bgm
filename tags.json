@@ -88,7 +88,8 @@
     "Laugh It Away",
     "I'm NOT OKAY!",
     "PLAY IT WILD",
-    "午前零時の余白 — After Midnight"
+    "午前零時の余白 — After Midnight",
+    "Midnight After Hours"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -215,6 +216,15 @@
     "The Word I Won’t Say",
     "★M マルゲッタの誘惑 ~ J-POP Stylish & Catchy ~"
   ],
+  "jazz": [
+    "Another night ~Brust Jazz Session Ver. ~",
+    "Between Yesterday and Today （リミックス）",
+    "Let the rhythm set me free ~JAZZ HOUSE Ver.~",
+    "Swing It Up",
+    "SWING TONIGHT",
+    "午前零時の余白 — After Midnight",
+    "Midnight After Hours"
+  ],
   "orchestra": [
     "Contraste",
     "It’s Maru Getta tonight",
@@ -246,14 +256,6 @@
     "恋じゃない",
     "Over and Over Again",
     "PLAY IT WILD"
-  ],
-  "jazz": [
-    "Another night ~Brust Jazz Session Ver. ~",
-    "Between Yesterday and Today （リミックス）",
-    "Let the rhythm set me free ~JAZZ HOUSE Ver.~",
-    "Swing It Up",
-    "SWING TONIGHT",
-    "午前零時の余白 — After Midnight"
   ],
   "swing": [
     "Another night ~Brust Jazz Session Ver. ~",
@@ -311,6 +313,10 @@
     "Same X'mas Same LOVE",
     "信じさせて、Santa Claus"
   ],
+  "Tech house": [
+    "午前零時の余白 — After Midnight",
+    "Midnight After Hours"
+  ],
   "pipe organ": [
     "Piano vs"
   ],
@@ -326,7 +332,7 @@
   "Euro house": [
     "Laugh It Away"
   ],
-  "Tech house": [
-    "午前零時の余白 — After Midnight"
+  "soul": [
+    "Midnight After Hours"
   ]
 }

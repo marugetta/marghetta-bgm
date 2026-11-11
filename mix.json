@@ -559,6 +559,22 @@
   },
   "silence": 222.44
  },
+ "Midnight After Hours": {
+  "beat": 0.46206,
+  "start": 0.08,
+  "end": 281.33,
+  "silence": 282.0,
+  "duration": 282.0,
+  "key": "1A",
+  "in": {
+   "beat": 0.46393,
+   "downbeat": 0.744
+  },
+  "out": {
+   "beat": 0.46369,
+   "downbeat": 237.562
+  }
+ },
  "OUR STORY": {
   "beat": 0.45562,
   "start": 0.51,
