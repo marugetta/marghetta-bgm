@@ -89,7 +89,8 @@
     "I'm NOT OKAY!",
     "PLAY IT WILD",
     "午前零時の余白 — After Midnight",
-    "Midnight After Hours"
+    "Midnight After Hours",
+    "Cocoa Cocoa"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -115,7 +116,8 @@
     "恋煩い　~LOVESicK~",
     "消して、消さないで。",
     "信じさせて、Santa Claus",
-    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～"
+    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
+    "Cocoa Cocoa"
   ],
   "和楽器": [
     "Another night ~Brust Jazz Session Ver. ~",
@@ -193,7 +195,8 @@
     "Tequila",
     "THUNDER REIGN",
     "DRIP DRIP DROP! Ver2",
-    "POP! POP! CHAMPAGNE!"
+    "POP! POP! CHAMPAGNE!",
+    "Cocoa Cocoa"
   ],
   "city pop": [
     "Marugetta Got Me On Repeat",
@@ -293,6 +296,11 @@
     "Trumpet ARENA",
     "PLAY IT WILD"
   ],
+  "Tech house": [
+    "午前零時の余白 — After Midnight",
+    "Midnight After Hours",
+    "Cocoa Cocoa"
+  ],
   "conga": [
     "Butterfly Effect",
     "Marugetta"
@@ -312,10 +320,6 @@
   "X'mas": [
     "Same X'mas Same LOVE",
     "信じさせて、Santa Claus"
-  ],
-  "Tech house": [
-    "午前零時の余白 — After Midnight",
-    "Midnight After Hours"
   ],
   "pipe organ": [
     "Piano vs"

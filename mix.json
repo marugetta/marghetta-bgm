@@ -159,6 +159,22 @@
   },
   "silence": 313.96
  },
+ "Cocoa Cocoa": {
+  "beat": 0.44217,
+  "start": 0.1,
+  "end": 327.39,
+  "silence": 328.0,
+  "duration": 328.0,
+  "key": "1A",
+  "in": {
+   "beat": 0.44056,
+   "downbeat": 0.97
+  },
+  "out": {
+   "beat": 0.44043,
+   "downbeat": 284.064
+  }
+ },
  "Contraste": {
   "beat": 0.45128,
   "start": 0.86,
