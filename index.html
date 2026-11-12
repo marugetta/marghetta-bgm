@@ -330,7 +330,7 @@
   let favs = new Set(store.get('favs', [])); // お気に入り（曲名）。この端末だけに保存
   let favFilter = false;
   let newFilter = false;
-  const NEW_DAYS = 10; // 曲を追加してから何日「NEW」を出すか
+  const NEW_DAYS = 14; // 曲を追加してから何日「NEW」を出すか
   const isNew = s => !!s.added && Date.now() - Date.parse(s.added) < NEW_DAYS * 864e5;
   let excluded = new Set(store.get('exclude', [])); // 除外タグ。この端末に記憶（季節外れの曲を外すなど）
   let exclOpen = false;     // 除外タグを選ぶ欄を開いているか
