@@ -90,7 +90,8 @@
     "PLAY IT WILD",
     "午前零時の余白 — After Midnight",
     "Midnight After Hours",
-    "Cocoa Cocoa"
+    "Cocoa Cocoa",
+    "Same Old Smile"
   ],
   "Y2K": [
     "COME MY WAY",
@@ -117,7 +118,8 @@
     "消して、消さないで。",
     "信じさせて、Santa Claus",
     "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
-    "Cocoa Cocoa"
+    "Cocoa Cocoa",
+    "Same Old Smile"
   ],
   "和楽器": [
     "Another night ~Brust Jazz Session Ver. ~",
@@ -228,6 +230,15 @@
     "午前零時の余白 — After Midnight",
     "Midnight After Hours"
   ],
+  "POP": [
+    "Little Happiness",
+    "LOVE ON BEAT",
+    "You Light Me Up",
+    "信じさせて、Santa Claus",
+    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
+    "I'm NOT OKAY!",
+    "Same Old Smile"
+  ],
   "orchestra": [
     "Contraste",
     "It’s Maru Getta tonight",
@@ -243,14 +254,6 @@
     "TRI-TRI-TRICK OR TREAT",
     "DRIP DRIP DROP! Ver2",
     "POP! POP! CHAMPAGNE!"
-  ],
-  "POP": [
-    "Little Happiness",
-    "LOVE ON BEAT",
-    "You Light Me Up",
-    "信じさせて、Santa Claus",
-    "I WISH I DIDN'T LOVE YOU　～好きにならなければ～",
-    "I'm NOT OKAY!"
   ],
   "violin": [
     "Black light",

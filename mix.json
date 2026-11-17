@@ -927,6 +927,22 @@
   },
   "silence": 292.71
  },
+ "Same Old Smile": {
+  "beat": 0.46257,
+  "start": 0.43,
+  "end": 308.15,
+  "silence": 308.76,
+  "duration": 309.88,
+  "key": "1A",
+  "in": {
+   "beat": 0.46356,
+   "downbeat": 2.251
+  },
+  "out": {
+   "beat": 0.46147,
+   "downbeat": 263.633
+  }
+ },
  "Same X'mas Same LOVE": {
   "beat": 0.44289,
   "start": 0.13,
